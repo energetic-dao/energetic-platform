@@ -1,45 +1,42 @@
-import { KadenaNetworks, Wallet, XWallet, XWalletIntegrator } from '~/src/infrastructure/chain/x-wallet';
+import { KadenaNetworks, Wallet, XWallet, XWalletIntegrator } from '~/src/infrastructure/wallets/x-wallet';
+import { IProvider, Session } from '~/src/infrastructure/wallets/provider.interface';
+import { WalletConnectProvider } from '~/src/infrastructure/wallets/providers/wallet-connect.provider';
 
 export interface WalletStore {
-  integrator?: XWallet;
+  provider?: IProvider;
+  providerType?: string; // @todo: enum
+  session?: Session;
   network: KadenaNetworks;
   wallet?: Wallet;
 }
 
 export const useWallet = defineStore('wallet', {
   state: (): WalletStore => ({
-    integrator: undefined,
-    network: KadenaNetworks.MAINNET,
-    wallet: undefined,
+    network: KadenaNetworks.TESTNET,
   }),
   getters: {
-    selectedNetwork: async (state) => {
-      return state.integrator?.getNetwork();
-    },
-    isConnected: (state) => !!state.wallet,
+    isConnected: (state) => !!state.session,
+    getSession: (state) => state.session,
   },
   actions: {
-    initialize(integrator?: XWalletIntegrator) {
-      if (!integrator) {
-        throw new Error('wallet not found');
-      }
-      this.integrator = new XWallet(integrator);
-    },
     async connect() {
-      const response = await this.integrator?.connect(this.network);
-
-      if (response?.status === 'fail') {
-        throw new Error('failed to connect wallet');
+      if (!this.provider) {
+        throw new Error('No provider');
       }
+      const config = useRuntimeConfig();
+      const session = await this.provider.connect(config.public);
 
-      this.wallet = response?.account;
+      console.log('session', session);
+      this.session = session;
+      console.log('session', this.session);
     },
-
-    async disconnect() {
-      const response = await this.integrator?.disconnect(this.network);
-      console.log(response);
-      this.wallet = undefined;
-      this.integrator = undefined;
+    setProvider(providerType: string) {
+      const config = useRuntimeConfig();
+      switch (providerType) {
+        case 'wallet-connect':
+          this.provider = new WalletConnectProvider(config.public);
+          break;
+      }
     },
   },
 });

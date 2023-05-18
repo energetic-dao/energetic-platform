@@ -5,9 +5,7 @@
   <div id="modal-container"></div>
 </template>
 
-<script setup>
-import WalletConnectModal from '~/src/components/modals/walletConnectModal.vue';
-</script>
+<script setup></script>
 
 <style>
 nav {
