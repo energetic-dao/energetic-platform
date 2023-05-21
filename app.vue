@@ -5,7 +5,17 @@
   <div id="modal-container"></div>
 </template>
 
-<script setup></script>
+<script setup lang="ts">
+import { onBeforeMount } from 'vue';
+import { ProviderType, useWallet } from '~/src/stores/wallet.store';
+
+const walletStore = useWallet();
+
+onBeforeMount(async () => {
+  await walletStore.setProvider(ProviderType.WALLET_CONNECT);
+  await walletStore.connect();
+});
+</script>
 
 <style>
 nav {
