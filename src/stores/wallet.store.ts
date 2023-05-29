@@ -2,6 +2,7 @@ import { KADENA_CHAIN, Provider, Session } from '~/src/infrastructure/types/wall
 import { WalletConnectProvider } from '~/src/infrastructure/types/wallets/providers/wallet-connect.provider';
 import { RuntimeConfig } from '@nuxt/schema';
 import { ProviderException } from '~/src/infrastructure/types/exceptions/provider.exception';
+import { XWalletProvider } from '~/src/infrastructure/types/wallets/providers/x-wallet.provider';
 
 export enum ProviderType {
   WALLET_CONNECT = 'wallet-connect',
@@ -54,6 +55,10 @@ export const useWallet = defineStore('wallet', {
       switch (providerType) {
         case ProviderType.WALLET_CONNECT:
           this.provider = new WalletConnectProvider(config.public);
+          break;
+        case ProviderType.X_WALLET:
+          // @ts-ignore
+          this.provider = new XWalletProvider(window.kadena, this.network);
           break;
         default:
           this.session = undefined;
