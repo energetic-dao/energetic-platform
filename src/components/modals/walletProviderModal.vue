@@ -122,6 +122,7 @@
 <script setup lang="ts">
 import { ProviderType, useWallet } from '~/src/stores/wallet.store';
 import { storeToRefs } from 'pinia';
+import { useLocalStorage, RemovableRef } from '@vueuse/core';
 
 const walletStore = useWallet();
 const {} = storeToRefs(walletStore);
@@ -129,6 +130,7 @@ const {} = storeToRefs(walletStore);
 const isLoadingXWallet = ref(false);
 
 const emit = defineEmits(['update:show']);
+const providerType: RemovableRef<ProviderType | null> = useLocalStorage('provider-type', null);
 
 const props = defineProps({
   show: {
@@ -148,6 +150,7 @@ onBeforeMount(() => {
 const initializeProvider = async (type: ProviderType) => {
   walletStore.setProvider(type);
   await walletStore.connect();
+  providerType.value = type;
   emit('update:show', false);
 };
 </script>

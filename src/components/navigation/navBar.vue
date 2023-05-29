@@ -73,16 +73,19 @@
 import WalletProviderModal from '~/src/components/modals/walletProviderModal.vue';
 import { storeToRefs } from 'pinia';
 import { Ref } from 'vue';
-import { useWallet } from '~/src/stores/wallet.store';
+import { ProviderType, useWallet } from '~/src/stores/wallet.store';
+import { useLocalStorage, RemovableRef } from '@vueuse/core';
 
 const walletStore = useWallet();
 const { getWalletAddress, isConnected, provider } = storeToRefs(walletStore);
 
 const showWalletProvider: Ref<boolean> = ref<boolean>(false);
+const providerType: RemovableRef<ProviderType | null> = useLocalStorage('provider-type', null);
 
 const handleWalletProviderModal = async () => {
   if (isConnected.value) {
     await walletStore.disconnect();
+    providerType.value = null;
     return;
   }
   showWalletProvider.value = true;
