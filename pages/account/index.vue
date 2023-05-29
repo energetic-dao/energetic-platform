@@ -1,13 +1,5 @@
-<template>
-  {{ wallet }}
-</template>
+<template></template>
 
-<script setup lang="ts">
-import { useWallet } from '~/src/stores/wallet.store';
-import { storeToRefs } from 'pinia';
-
-const walletStore = useWallet();
-const { wallet } = storeToRefs(walletStore);
-</script>
+<script setup lang="ts"></script>
 
 <style scoped></style>

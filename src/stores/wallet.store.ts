@@ -1,45 +1,70 @@
-import { KadenaNetworks, Wallet, XWallet, XWalletIntegrator } from '~/src/infrastructure/chain/x-wallet';
+import { KADENA_CHAIN, Provider, Session } from '~/src/infrastructure/types/wallets';
+import { WalletConnectProvider } from '~/src/infrastructure/types/wallets/providers/wallet-connect.provider';
+import { RuntimeConfig } from '@nuxt/schema';
+import { ProviderException } from '~/src/infrastructure/types/exceptions/provider.exception';
+import { XWalletProvider } from '~/src/infrastructure/types/wallets/providers/x-wallet.provider';
+
+export enum ProviderType {
+  WALLET_CONNECT = 'wallet-connect',
+  X_WALLET = 'x-wallet',
+}
 
 export interface WalletStore {
-  integrator?: XWallet;
-  network: KadenaNetworks;
-  wallet?: Wallet;
+  provider?: Provider;
+  session?: Session;
+  network: KADENA_CHAIN;
+  isConnect: boolean;
 }
 
 export const useWallet = defineStore('wallet', {
   state: (): WalletStore => ({
-    integrator: undefined,
-    network: KadenaNetworks.MAINNET,
-    wallet: undefined,
+    network: KADENA_CHAIN.TESTNET,
+    isConnect: false,
   }),
   getters: {
-    selectedNetwork: async (state) => {
-      return state.integrator?.getNetwork();
-    },
-    isConnected: (state) => !!state.wallet,
+    isConnected: (state) => state.isConnect,
+    getSession: (state) => state.session,
+    getNetwork: (state) => state.network,
+    getWalletAddress: (state) => `k:${state.session?.account}`,
   },
   actions: {
-    initialize(integrator?: XWalletIntegrator) {
-      if (!integrator) {
-        throw new Error('wallet not found');
+    async connect(): Promise<void> {
+      if (!this.provider) {
+        throw new ProviderException("Provider isn't set");
       }
-      this.integrator = new XWallet(integrator);
+      const config: RuntimeConfig = useRuntimeConfig();
+      this.session = await this.provider.connect(config.public);
+      this.isConnect = true;
     },
-    async connect() {
-      const response = await this.integrator?.connect(this.network);
-
-      if (response?.status === 'fail') {
-        throw new Error('failed to connect wallet');
+    async disconnect(): Promise<void> {
+      if (!this.provider) {
+        throw new ProviderException("Provider isn't set");
       }
-
-      this.wallet = response?.account;
+      await this.provider.disconnect(this.session);
+      this.session = undefined;
+      this.isConnect = false;
     },
-
-    async disconnect() {
-      const response = await this.integrator?.disconnect(this.network);
-      console.log(response);
-      this.wallet = undefined;
-      this.integrator = undefined;
+    async sign(signRequest: any): Promise<void> {
+      if (!this.provider) {
+        throw new ProviderException("Provider isn't set");
+      }
+      await this.provider.sign(signRequest);
+    },
+    setProvider(providerType: ProviderType) {
+      const config: RuntimeConfig = useRuntimeConfig();
+      switch (providerType) {
+        case ProviderType.WALLET_CONNECT:
+          this.provider = new WalletConnectProvider(config.public);
+          break;
+        case ProviderType.X_WALLET:
+          // @ts-ignore
+          this.provider = new XWalletProvider(window.kadena, this.network);
+          break;
+        default:
+          this.session = undefined;
+          this.isConnect = false;
+          throw new ProviderException('Provider not supported');
+      }
     },
   },
 });
