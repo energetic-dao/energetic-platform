@@ -1,4 +1,4 @@
-import { KadenaNetworks } from '~/src/infrastructure/wallets/x-wallet';
+import { KADENA_CHAIN, Provider, Session } from '~/src/infrastructure/types/wallets';
 import { IProvider, Session } from '~/src/infrastructure/wallets/provider.interface';
 import { WalletConnectProvider } from '~/src/infrastructure/wallets/providers/wallet-connect.provider';
 import { RuntimeConfig } from '@nuxt/schema';
@@ -10,15 +10,15 @@ export enum ProviderType {
 }
 
 export interface WalletStore {
-  provider?: IProvider;
+  provider?: Provider;
   session?: Session;
-  network: KadenaNetworks;
+  network: KADENA_CHAIN;
   isConnect: boolean;
 }
 
 export const useWallet = defineStore('wallet', {
   state: (): WalletStore => ({
-    network: KadenaNetworks.TESTNET,
+    network: KADENA_CHAIN.TESTNET,
     isConnect: false,
   }),
   getters: {

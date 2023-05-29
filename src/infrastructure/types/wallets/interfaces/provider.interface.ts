@@ -1,11 +1,7 @@
-export type Session = {
-  account: string;
-  network: string;
-  chainId: number;
-  topic?: string;
-};
+import { Session } from './session.type';
 
-export interface IProvider {
+export interface Provider {
   connect(config?: Record<string, string | number | boolean>): Promise<Session>;
+  sign<T>(signRequest: any): Promise<T>;
   disconnect(session?: Session): Promise<void>;
 }
