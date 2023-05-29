@@ -23,6 +23,11 @@ export default defineNuxtConfig({
     autoImports: ['defineStore', 'acceptHMRUpdate'],
   },
   css: ['@/assets/css/main.css'],
+  plugins: [
+    {
+      src: '~/plugins/client.plugin.ts',
+      mode: 'all',
+    },
     {
       src: '~/plugins/charts.plugin.ts',
       mode: 'client',
