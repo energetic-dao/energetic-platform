@@ -1,6 +1,5 @@
 import { KADENA_CHAIN, Provider, Session } from '~/src/infrastructure/types/wallets';
-import { IProvider, Session } from '~/src/infrastructure/wallets/provider.interface';
-import { WalletConnectProvider } from '~/src/infrastructure/wallets/providers/wallet-connect.provider';
+import { WalletConnectProvider } from '~/src/infrastructure/types/wallets/providers/wallet-connect.provider';
 import { RuntimeConfig } from '@nuxt/schema';
 import { ProviderException } from '~/src/infrastructure/types/exceptions/provider.exception';
 
@@ -43,6 +42,12 @@ export const useWallet = defineStore('wallet', {
       await this.provider.disconnect(this.session);
       this.session = undefined;
       this.isConnect = false;
+    },
+    async sign(signRequest: any): Promise<void> {
+      if (!this.provider) {
+        throw new ProviderException("Provider isn't set");
+      }
+      await this.provider.sign(signRequest);
     },
     setProvider(providerType: ProviderType) {
       const config: RuntimeConfig = useRuntimeConfig();

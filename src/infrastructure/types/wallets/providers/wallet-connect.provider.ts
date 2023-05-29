@@ -1,61 +1,56 @@
-import { IProvider, Session } from '~/src/infrastructure/wallets/provider.interface';
+import { Provider, Session, KADENA_CHAIN, KADENA_METHOD } from '~/src/infrastructure/types/wallets';
 import Client, { SignClient } from '@walletconnect/sign-client';
+import { ISigningRequest } from '@kadena/types';
 import { Web3Modal } from '@web3modal/standalone';
 import { PublicRuntimeConfig } from '@nuxt/schema';
 import { getSdkError } from '@walletconnect/utils';
 import { SessionTypes } from '@walletconnect/types';
 
-export class WalletConnectProvider implements IProvider {
+export class WalletConnectProvider implements Provider {
   private readonly _web3Modal: Web3Modal;
   private signClient: Client | null = null;
 
   constructor(config: PublicRuntimeConfig) {
     this._web3Modal = new Web3Modal({
       projectId: config.WALLET_CONNECT_PROJECT_ID,
-      standaloneChains: ['kadena:testnet04'],
+      standaloneChains: Object.values(KADENA_CHAIN),
       walletConnectVersion: 2,
     });
   }
 
-  async connect(config: PublicRuntimeConfig): Promise<Session> {
+  async connect(config: PublicRuntimeConfig): Promise<Session & { topic: string }> {
     this.signClient = await SignClient.init({
       projectId: config.WALLET_CONNECT_PROJECT_ID,
       relayUrl: config.WALLET_CONNECT_RELAY_URL,
     });
 
-    if (this.signClient.session.length > 0) {
-      return this.restoreSession();
-    }
-
     const { uri, approval } = await this.signClient.connect({
       requiredNamespaces: {
         kadena: {
-          methods: ['kadena_getAccounts_v1', 'kadena_sign_v1', 'kadena_quicksign_v1'],
-          chains: ['kadena:mainnet01', 'kadena:testnet04', 'kadena:development'],
-          events: [],
+          methods: Object.values(KADENA_METHOD),
+          chains: Object.values(KADENA_CHAIN).map((chain) => `kadena:${chain}`),
+          events: ['kadena_transaction_updated'],
         },
       },
     });
+
+    if (this.signClient.session.length > 0) {
+      return this.getSession();
+    }
 
     if (!uri) {
       throw new Error('uri is empty');
     }
 
     await this._web3Modal.openModal({ uri });
-    const rawSession: SessionTypes.Struct = await approval();
+    await approval();
 
     this._web3Modal.closeModal();
-    // 1 is testnet account, 0 is mainnet account
-    const account: string[] = rawSession.namespaces.kadena.accounts[1].split(':');
-    return {
-      topic: rawSession.topic,
-      account: account[2],
-      network: account[1],
-      chainId: 0,
-    };
+
+    return this.getSession();
   }
 
-  async restoreSession(): Promise<Session> {
+  getSession(): Session & { topic: string } {
     if (!this.signClient) {
       throw new Error('client is not initialized');
     }
@@ -66,17 +61,37 @@ export class WalletConnectProvider implements IProvider {
 
     const session: SessionTypes.Struct = this.signClient.session.get(this.signClient.session.keys[this.signClient.session.length - 1]);
     const account: string[] = session.namespaces.kadena.accounts[1].split(':');
+
+    // 1 is testnet account, 0 is mainnet account
     return {
       topic: session.topic,
       account: account[2],
-      network: account[1],
-      chainId: 0,
+      network: `kadena:${account[1]}`,
     };
   }
 
-  async sign(): Promise<void> {}
+  async sign<T>(signRequest: ISigningRequest): Promise<T> {
+    if (!this.signClient) {
+      throw new Error('client is not initialized');
+    }
 
-  async disconnect(session: Session): Promise<void> {
+    const session: Session & { topic: string } = this.getSession();
+
+    if (!session) {
+      throw new Error('There are no active sessions');
+    }
+
+    return this.signClient?.request({
+      topic: session.topic,
+      chainId: session.network,
+      request: {
+        method: KADENA_METHOD.KDA_SIGN,
+        params: signRequest,
+      },
+    });
+  }
+
+  async disconnect(session: Session & { topic: string }): Promise<void> {
     if (!this.signClient) {
       throw new Error('client is not initialized');
     }
