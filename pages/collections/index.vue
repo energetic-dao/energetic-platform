@@ -30,7 +30,7 @@
     <div v-for="i of 25" @click.prevent="$router.push(`/collections/${i}`)" class="flex flex-col cursor-pointer">
       <img class="rounded h-64 w64" src="https://image-optimizer.jpgstoreapis.com/QmTd1MGtLmRRBQERQduDFFZ5B9yjwzZDkvW4C4CUnh5LXd?width=600" />
       <div class="p-2 bg-primary-300 rounded-b">
-        <h2 class="text-2xl">Kinetic Collection #{{ i }}</h2>
+        <h2 class="text-2xl">Energetic Collection #{{ i }}</h2>
         <div class="flex flex-col">
           <span class="text-sm">Description</span>
           <span class="text-sm">Floor price: <span class="font-bold">100 KDA</span> </span>

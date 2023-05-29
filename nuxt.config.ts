@@ -5,6 +5,8 @@ export default defineNuxtConfig({
       // wallet connect config
       WALLET_CONNECT_RELAY_URL: 'wss://relay.walletconnect.com',
       WALLET_CONNECT_PROJECT_ID: '5a75812c2131cb9c3c23643c78ae206f',
+      // nft-viewer config
+      NFT_VIEWER_URL: 'http://localhost:3001',
 
       // chainweb config
       NETWORK: 'testnet',
@@ -21,4 +23,9 @@ export default defineNuxtConfig({
     autoImports: ['defineStore', 'acceptHMRUpdate'],
   },
   css: ['@/assets/css/main.css'],
+    {
+      src: '~/plugins/charts.plugin.ts',
+      mode: 'client',
+    },
+  ],
 });

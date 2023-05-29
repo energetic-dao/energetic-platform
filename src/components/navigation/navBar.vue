@@ -37,8 +37,8 @@
             </svg>
           </button>
           <a href="" class="text-xl font-bold flex items-center lg:ml-2.5">
-            <!--            <img src="/images/logo.svg" class="h-6 mr-2" alt="Kinetic logo" />-->
-            <h1 class="text-4xl">Kinetic DAO</h1>
+            <!--            <img src="/images/logo.svg" class="h-6 mr-2" alt="Energetic logo" />-->
+            <h1 class="text-4xl">Energetic DAO</h1>
           </a>
         </div>
         <div class="flex items-center truncate">

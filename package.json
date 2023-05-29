@@ -22,5 +22,7 @@
     "@walletconnect/encoding": "^1.0.2",
     "@walletconnect/sign-client": "^2.7.5",
     "@web3modal/standalone": "^2.4.1"
+    "apexcharts": "^3.40.0",
+    "vue3-apexcharts": "^1.4.1"
   }
 }
