@@ -32,7 +32,6 @@ export class ActionHandlerBus<THandler extends IActionHandler<THandler> = IActio
   }
 
   public getActionMetadataByHandler(handler: THandler): IActionMetadata {
-    console.log(handler, this._metaDataKey);
     const { action }: IActionHandlerMetaData<IAction> = this.getMetaData(handler.constructor);
 
     if (!action) {
@@ -43,7 +42,6 @@ export class ActionHandlerBus<THandler extends IActionHandler<THandler> = IActio
   }
 
   private getMetaData<T extends Object>(handler: T): IActionHandlerMetaData<IAction> {
-    console.log(Reflect.getMetadata(`${this._metaDataKey}_handler`, handler));
     return Reflect.getMetadata(`${this._metaDataKey}_handler`, handler);
   }
 

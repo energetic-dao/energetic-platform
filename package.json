@@ -16,7 +16,7 @@
     "prettier": "^2.8.4"
   },
   "dependencies": {
-    "@kadena/client": "^0.2.11",
+    "@kadena/client": "^0.3.0",
     "@kadena/pactjs": "^0.2.5",
     "@kadena/pactjs-cli": "^0.0.12",
     "@pinia/nuxt": "^0.4.7",

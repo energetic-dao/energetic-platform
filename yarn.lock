@@ -579,37 +579,37 @@
     "@jridgewell/resolve-uri" "3.1.0"
     "@jridgewell/sourcemap-codec" "1.4.14"
 
-"@kadena/chainweb-node-client@0.2.5":
-  version "0.2.5"
-  resolved "https://registry.yarnpkg.com/@kadena/chainweb-node-client/-/chainweb-node-client-0.2.5.tgz#9767b8b9e9df84a6dd1d15f78ed47f2364ea51c4"
-  integrity sha512-NhQArHQDueMMkBeNtSKjmr48AccMnJKGrG1gadizrVG6g2lWs/1TJaC26BpZgOOahUv19eNssQeBdn2dss9S+Q==
+"@kadena/chainweb-node-client@0.3.0":
+  version "0.3.0"
+  resolved "https://registry.yarnpkg.com/@kadena/chainweb-node-client/-/chainweb-node-client-0.3.0.tgz#7c7adde015a80e43bbbdf8229a4ed56660f96461"
+  integrity sha512-nAGWd13lkETJOLWOkDz4KdTqnX/9c94gqGwcgzhJiLFEp1yyp6Ej6ZSzY/ND0SpilT5F/DKDN+NFbaIXKLo/pw==
   dependencies:
-    "@kadena/cryptography-utils" "0.2.5"
-    "@kadena/pactjs" "0.2.5"
-    "@kadena/types" "0.2.3"
+    "@kadena/cryptography-utils" "0.3.0"
+    "@kadena/pactjs" "0.2.6"
+    "@kadena/types" "0.3.0"
     "@types/isomorphic-fetch" "~0.0.36"
     cross-fetch "~3.1.5"
     node-fetch "~2.6.2"
 
-"@kadena/client@^0.2.11":
-  version "0.2.11"
-  resolved "https://registry.yarnpkg.com/@kadena/client/-/client-0.2.11.tgz#bce0bb1a0c9dcf934dd3abb9c40bd35cb00a4cb7"
-  integrity sha512-7tbR24kIA4aWh6E6whnhozPEX+jVc10iZkJjibSz+lUC8aMIEpw2EJcG+2ujXps1pqK7DTXohh6D/152AGtKKA==
+"@kadena/client@^0.3.0":
+  version "0.3.0"
+  resolved "https://registry.yarnpkg.com/@kadena/client/-/client-0.3.0.tgz#2881d35334e2aab88efed52246c9dc63bff6c713"
+  integrity sha512-jnbwHo1TwlFqSm4K7OP39P84YIwHZL7MRLQxBJBYV8QJs47AxCHqytHJkpZ7x0yPdLOQy/09DFVXNGxId7HpvA==
   dependencies:
-    "@kadena/chainweb-node-client" "0.2.5"
-    "@kadena/cryptography-utils" "0.2.5"
-    "@kadena/pactjs" "0.2.5"
-    "@kadena/types" "0.2.3"
+    "@kadena/chainweb-node-client" "0.3.0"
+    "@kadena/cryptography-utils" "0.3.0"
+    "@kadena/pactjs" "0.2.6"
+    "@kadena/types" "0.3.0"
     cross-fetch "~3.1.5"
     debug "~4.3.4"
     yaml "~2.1.1"
 
-"@kadena/cryptography-utils@0.2.5":
-  version "0.2.5"
-  resolved "https://registry.yarnpkg.com/@kadena/cryptography-utils/-/cryptography-utils-0.2.5.tgz#80281db536092c654db471d8de08b5de78654aaf"
-  integrity sha512-Y7a9OOa9sW+DaG3DmxPoNMuo3ovMAEkwt978qZl6hGGkZKUKTTu8geeMuM6VXuH20Jl1b3s2nK6ZdtOiPnv4Eg==
+"@kadena/cryptography-utils@0.3.0":
+  version "0.3.0"
+  resolved "https://registry.yarnpkg.com/@kadena/cryptography-utils/-/cryptography-utils-0.3.0.tgz#1e63a1e28f992b8de5f40e8f7042805a26519543"
+  integrity sha512-UjdY2EpdmNb6VBEmie6WNKG6+jyrtwtg3TopRSh2pKLoEImFIngGqEkj3Jc5N0J1M9yfICNPeypZf8BStqC69A==
   dependencies:
-    "@kadena/types" "0.2.3"
+    "@kadena/types" "0.3.0"
     blakejs "^1.2.1"
     buffer "^6.0.3"
     tweetnacl "^1.0.3"
@@ -640,7 +640,15 @@
     ramda "~0.28.0"
     yaml "~2.1.1"
 
-"@kadena/pactjs@0.2.5", "@kadena/pactjs@^0.2.5":
+"@kadena/pactjs@0.2.6":
+  version "0.2.6"
+  resolved "https://registry.yarnpkg.com/@kadena/pactjs/-/pactjs-0.2.6.tgz#8db3fd0b2ef4d0dd1f20d1673cf139c6a9c33f55"
+  integrity sha512-H0pJbCNAP9JqQ7FYxcho5BIBkl3ang36XCyiQooimajzB9tiYwgE9lozsDBfh0KPDQ3xpRXshsaj8PM9BcJhlg==
+  dependencies:
+    "@kadena/types" "0.3.0"
+    bignumber.js "^9.0.2"
+
+"@kadena/pactjs@^0.2.5":
   version "0.2.5"
   resolved "https://registry.yarnpkg.com/@kadena/pactjs/-/pactjs-0.2.5.tgz#621919865b57c8d3b43b8690dbb3eb7e5b8f9feb"
   integrity sha512-+NT1heouB5VXxvppibGIQqSE+I1rmIKx0V9P1LN9Z6MftnqvqGPdykoAc/7ODOZBzxsFjJySb9ZqCirm8psjyA==
@@ -652,6 +660,11 @@
   version "0.2.3"
   resolved "https://registry.yarnpkg.com/@kadena/types/-/types-0.2.3.tgz#e2d22b6b58aa029f079879eec0e84d6119fe20ac"
   integrity sha512-B+/wu3UnxdoECXAgjsejxoSKX4QrGSjw6H2XcLSwLAKnN31pEU28pXSBHw7KwMS8jGzJ/1ZdKvFOSk+7kjcl4w==
+
+"@kadena/types@0.3.0":
+  version "0.3.0"
+  resolved "https://registry.yarnpkg.com/@kadena/types/-/types-0.3.0.tgz#5f93811ae7986f3889ccd58a840440d56c326529"
+  integrity sha512-VgdlbKuQPsLSEgm6VwUIFZLRaS+9QgbmbMmUgMduksPJdSG6oaRLrDrmGB+SkcnCYIMI4CVlgcU1Lp8vvh3YHg==
 
 "@koa/router@^9.0.1":
   version "9.4.0"

@@ -25,10 +25,6 @@ export default defineNuxtConfig({
   css: ['@/assets/css/main.css'],
   plugins: [
     {
-      src: '~/plugins/client.plugin.ts',
-      mode: 'all',
-    },
-    {
       src: '~/plugins/cqrs.plugin.ts',
       mode: 'all',
     },
