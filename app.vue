@@ -7,7 +7,7 @@
 
 <script setup lang="ts">
 import { onBeforeMount } from 'vue';
-import { ProviderType, useWallet } from '~/src/stores/wallet.store';
+import { ProviderType, useWallet } from '@/src/stores/wallet.store';
 import { useLocalStorage, RemovableRef } from '@vueuse/core';
 
 const walletStore = useWallet();

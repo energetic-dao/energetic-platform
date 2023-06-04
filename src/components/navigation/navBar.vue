@@ -70,10 +70,10 @@
 </template>
 
 <script setup lang="ts">
-import WalletProviderModal from '~/src/components/modals/walletProviderModal.vue';
+import WalletProviderModal from '@/src/components/modals/walletProviderModal.vue';
 import { storeToRefs } from 'pinia';
 import { Ref } from 'vue';
-import { ProviderType, useWallet } from '~/src/stores/wallet.store';
+import { ProviderType, useWallet } from '@/src/stores/wallet.store';
 import { useLocalStorage, RemovableRef } from '@vueuse/core';
 
 const walletStore = useWallet();

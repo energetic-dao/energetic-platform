@@ -120,7 +120,7 @@
 </template>
 
 <script setup lang="ts">
-import { ProviderType, useWallet } from '~/src/stores/wallet.store';
+import { ProviderType, useWallet } from '@/src/stores/wallet.store';
 import { storeToRefs } from 'pinia';
 import { useLocalStorage, RemovableRef } from '@vueuse/core';
 

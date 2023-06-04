@@ -1,4 +1,4 @@
-import { Client } from '~/src/infrastructure/api/client';
+import { Client } from '@/src/api/client';
 
 export default defineNuxtPlugin((NuxtApp) => {
   const { public: config } = useRuntimeConfig();
