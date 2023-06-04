@@ -1,5 +1,5 @@
-import { CoinEndpoint } from '~/src/infrastructure/api/endpoints/coin.endpoint';
-import { ChainWebProvider } from '~/src/infrastructure/api/providers/chain-web.provider';
+import { CoinEndpoint } from '@/src/infrastructure/api/endpoints/coin.endpoint';
+import { ChainWebProvider } from '@/src/infrastructure/api/providers/chain-web.provider';
 
 export class Client {
   private _provider: ChainWebProvider;

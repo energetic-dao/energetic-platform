@@ -29,6 +29,10 @@ export default defineNuxtConfig({
       mode: 'all',
     },
     {
+      src: '~/plugins/cqrs.plugin.ts',
+      mode: 'all',
+    },
+    {
       src: '~/plugins/charts.plugin.ts',
       mode: 'client',
     },
