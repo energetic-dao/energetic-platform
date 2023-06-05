@@ -1,25 +1,25 @@
 import 'reflect-metadata';
 import { ActionHandlerBus, IActionBus, Metadata } from '@/src/infrastructure/cqrs/action-handlers';
-import { Command } from '@/src/infrastructure/cqrs/commands/classes';
+import { Query } from '~/src/infrastructure/cqrs/queries';
 
-export class CommandBus extends ActionHandlerBus<CommandBus> implements IActionBus {
+export class QueryBus extends ActionHandlerBus<QueryBus> implements IActionBus {
   constructor() {
-    super(Metadata.COMMAND);
+    super(Metadata.QUERY);
   }
 
-  async execute<Request>(command: Command<Request>): Promise<void> {
-    const commandId = this.getId(command);
+  async execute<Request>(query: Query<Request>): Promise<void> {
+    const queryId = this.getId(query);
 
-    if (!commandId) {
-      throw new Error(`Command is not registered`);
+    if (!queryId) {
+      throw new Error(`Query is not registered`);
     }
 
-    const commandHandler = this.handlers.get(commandId);
-    if (!commandHandler) {
-      throw new Error(`Command with ${commandId} not found in handlers`);
+    const queryHandler = this.handlers.get(queryId);
+    if (!queryHandler) {
+      throw new Error(`Query with ${queryId} not found in handlers`);
     }
 
-    const { handler } = commandHandler;
+    const { handler } = queryHandler;
 
     //const next = async ({ index = 0, context }: { index?: number; context: Command<Request> }): Promise<void> => {
     //  if (middlewares.length <= 0 || index === middlewares.length) {
@@ -36,6 +36,6 @@ export class CommandBus extends ActionHandlerBus<CommandBus> implements IActionB
     //  return;
     //};
 
-    return handler.execute(command);
+    return handler.execute(query);
   }
 }

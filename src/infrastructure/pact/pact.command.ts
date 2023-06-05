@@ -36,8 +36,6 @@ export class PactCommand<M extends PactModule = PactModule, F extends PactFuncti
   ): Promise<any> {
     const { result } = await builtCommand.local('https://api.testnet.chainweb.com/chainweb/0.0/testnet04/chain/1/pact', options);
 
-    console.log(builtCommand);
-
     if (result.status !== 'success') {
       console.error(result);
       throw new Error(`Pact command failed: ${result.status}`);
