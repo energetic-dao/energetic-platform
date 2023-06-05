@@ -1,19 +1,16 @@
-import { Command, CommandHandler } from '~/src/infrastructure/cqrs/commands';
+import { Command, CommandHandler, ICommandHandler } from '~/src/infrastructure/cqrs/commands';
 import { PactCommand } from '~/src/infrastructure/pact/pact.command';
 import CreateCollectionCommand, { CreateCollectionData } from '~/src/api/commands/marmalade/collection/create/create-collection.command';
 import { PactModule } from '~/src/infrastructure/pact';
 import { Metadata } from '~/src/infrastructure/cqrs/action-handlers';
 
-export interface ICommandHandler {
-  execute<Request = any>(actionRequest: Request): Promise<void>;
-
-  execute<Request = any, Response = any>(actionRequest: Request): Promise<Response>;
-}
-
 @CommandHandler(CreateCollectionCommand)
-export default class CreateCollectionHandler extends PactCommand<PactModule.MARMALADE_COLLECTION, 'collection'> implements ICommandHandler {
+export default class CreateCollectionHandler
+  extends PactCommand<PactModule.MARMALADE_COLLECTION, 'create-collection'>
+  implements ICommandHandler<CreateCollectionData>
+{
   constructor() {
-    super(PactModule.MARMALADE_COLLECTION, 'collection');
+    super(PactModule.MARMALADE_COLLECTION, 'create-collection');
   }
 
   async execute({ data }: Command<CreateCollectionData>): Promise<void> {
