@@ -1,18 +1,14 @@
-import { Command, CommandHandler } from '~/src/infrastructure/cqrs/commands';
+import { Command, CommandHandler, ICommandHandler } from '~/src/infrastructure/cqrs/commands';
 import { PactCommand } from '~/src/infrastructure/pact/pact.command';
-import CreateCollectionCommand, { CreateCollectionData } from '~/src/api/commands/marmalade/collection/create/create-collection.command';
+import LockPlotCommand, { LockPlotData } from '~/src/api/commands/energetic/staking/plot/locking/lock-plot.command';
 import { PactModule } from '~/src/infrastructure/pact';
 import { Metadata } from '~/src/infrastructure/cqrs/action-handlers';
-import { LockPlotData } from '~/src/api/commands/energetic/staking/plot/lock-plot.command';
 
-export interface ICommandHandler {
-  execute<Request = any>(actionRequest: Request): Promise<void>;
-
-  execute<Request = any, Response = any>(actionRequest: Request): Promise<Response>;
-}
-
-@CommandHandler(CreateCollectionCommand)
-export default class LockPlotHandler extends PactCommand<PactModule.ENERGETIC_PLOT_STAKING_CENTER, 'lock-plot'> implements ICommandHandler {
+@CommandHandler(LockPlotCommand)
+export default class LockPlotHandler
+  extends PactCommand<PactModule.ENERGETIC_PLOT_STAKING_CENTER, 'lock-plot'>
+  implements ICommandHandler<LockPlotData>
+{
   constructor() {
     super(PactModule.ENERGETIC_PLOT_STAKING_CENTER, 'lock-plot');
   }
