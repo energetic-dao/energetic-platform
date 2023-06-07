@@ -27,7 +27,7 @@ interface IPactCommandSigner {
   caps: IPactCommandCap[];
 }
 
-export class PactCommand<M extends PactModule = PactModule, F extends PactFunction<M> = PactFunction<M>> {
+export class PactAction<M extends PactModule = PactModule, F extends PactFunction<M> = PactFunction<M>> {
   constructor(private readonly _module: M, private readonly _func: F) {}
 
   public async local(

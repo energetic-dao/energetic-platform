@@ -1,12 +1,12 @@
 import { Command, CommandHandler, ICommandHandler } from '~/src/infrastructure/cqrs/commands';
-import { PactCommand } from '~/src/infrastructure/pact/pact.command';
+import { PactAction } from '~/src/infrastructure/pact/pact.action';
 import CreateCollectionCommand, { CreateCollectionData } from '~/src/api/commands/marmalade/collection/create/create-collection.command';
 import { PactModule } from '~/src/infrastructure/pact';
 import { Metadata } from '~/src/infrastructure/cqrs/action-handlers';
 
 @CommandHandler(CreateCollectionCommand)
 export default class CreateCollectionHandler
-  extends PactCommand<PactModule.MARMALADE_COLLECTION, 'create-collection'>
+  extends PactAction<PactModule.MARMALADE_COLLECTION, 'create-collection'>
   implements ICommandHandler<CreateCollectionData>
 {
   constructor() {

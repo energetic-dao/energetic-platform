@@ -1,2 +1,2 @@
 export * from './types';
-export * from './pact.command';
+export * from './pact.action';

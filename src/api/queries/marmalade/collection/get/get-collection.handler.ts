@@ -1,6 +1,4 @@
-import { Command, CommandHandler, ICommandHandler } from '~/src/infrastructure/cqrs/commands';
-import { PactCommand } from '~/src/infrastructure/pact/pact.command';
-import CreateCollectionCommand, { CreateCollectionData } from '~/src/api/commands/marmalade/collection/create/create-collection.command';
+import { PactAction } from '~/src/infrastructure/pact/pact.action';
 import { PactModule } from '~/src/infrastructure/pact';
 import { Metadata } from '~/src/infrastructure/cqrs/action-handlers';
 import { IQueryHandler, Query, QueryHandler } from '~/src/infrastructure/cqrs/queries';
@@ -8,7 +6,7 @@ import GetCollectionQuery, { GetCollectionData } from '~/src/api/queries/marmala
 
 @QueryHandler(GetCollectionQuery)
 export default class GetCollectionHandler
-  extends PactCommand<PactModule.MARMALADE_COLLECTION, 'get-collection'>
+  extends PactAction<PactModule.MARMALADE_COLLECTION, 'get-collection'>
   implements IQueryHandler<GetCollectionData>
 {
   constructor() {

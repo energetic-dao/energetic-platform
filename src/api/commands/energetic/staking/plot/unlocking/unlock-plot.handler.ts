@@ -1,12 +1,12 @@
 import { Command, CommandHandler, ICommandHandler } from '~/src/infrastructure/cqrs/commands';
-import { PactCommand } from '~/src/infrastructure/pact/pact.command';
+import { PactAction } from '~/src/infrastructure/pact/pact.action';
 import { PactModule } from '~/src/infrastructure/pact';
 import { Metadata } from '~/src/infrastructure/cqrs/action-handlers';
 import UnlockPlotCommand, { UnLockPlotData } from '~/src/api/commands/energetic/staking/plot/unlocking/unlock-plot.command';
 
 @CommandHandler(UnlockPlotCommand)
 export default class UnlockPlotHandler
-  extends PactCommand<PactModule.ENERGETIC_PLOT_STAKING_CENTER, 'unlock-plot'>
+  extends PactAction<PactModule.ENERGETIC_PLOT_STAKING_CENTER, 'unlock-plot'>
   implements ICommandHandler<UnLockPlotData>
 {
   constructor() {
