@@ -84,15 +84,15 @@ const collectionForm = ref<CreateCollectionData>({
 });
 
 const tokenForm = ref<CreateTokenData>({
-  id: '',
-  collectionId: '',
+  id: 't:5zk8dgUtJ_gu-Lh9EvXBsUZ-MwuS5lESf-64WI_wWoo',
+  collectionId: 'collection:DEulkJ-qDySv_BFKQvJEj315-x5JdnFObku8DXk4iKI',
   precision: {
     int: '0',
   },
-  uri: '',
+  uri: 'ipfs://QmXZr5MD8MG2thzCd4zNegDiMDGLaBuFky2VUsd4o8cznQ/3.json',
   policies: {
     'concrete-policies': {
-      'quote-policy': true,
+      'quote-policy': false,
       'non-fungible-policy': true,
       'royalty-policy': false,
       'collection-policy': true,
@@ -103,9 +103,9 @@ const tokenForm = ref<CreateTokenData>({
 });
 
 const mintForm = ref<MintTokenData>({
-  id: '',
-  account: '',
-  keyset: '',
+  id: 't:GsbbZnpeqNcrgsER2a3sDiB_Yo4U-UdousDOFzurxN0',
+  account: 'k:00ea18feef966289dbd6b9b63ba6161c86fce643a9e684ad0d8e57f68bccd2dc',
+  keyset: 'energetic-admin',
   amount: {
     decimal: '1.0',
   },
@@ -147,7 +147,7 @@ const createCollectionToken = async () => {
             pred: 'keys-all',
           },
           token: {
-            index: '2',
+            index: '3',
           },
         },
       },
