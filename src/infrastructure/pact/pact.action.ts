@@ -1,7 +1,7 @@
 import { ICommandBuilder, IPactCommand, IPactModules, IPublicMeta, Pact } from '@kadena/client';
 import { useWallet } from '~/src/stores/wallet.store';
 import { ICap, ISignatureJson, ISigningCap, ISigningRequest } from '@kadena/types';
-import { IRequestKeys, send } from '@kadena/chainweb-node-client';
+import { IRequestKeys, send, local } from '@kadena/chainweb-node-client';
 
 type PactModule = keyof IPactModules;
 type PactFunction<T extends keyof IPactModules> = keyof IPactModules[T];
@@ -34,7 +34,7 @@ export class PactAction<M extends PactModule = PactModule, F extends PactFunctio
     builtCommand: ICommandBuilder<any> & IPactCommand,
     options: any = { preflight: false, signatureVerification: false },
   ): Promise<any> {
-    const { result } = await builtCommand.local('https://api.testnet.chainweb.com/chainweb/0.0/testnet04/chain/1/pact', options);
+    const { result } = await builtCommand.local(this.apiHost, options);
 
     if (result.status !== 'success') {
       console.error(result);
@@ -82,7 +82,7 @@ export class PactAction<M extends PactModule = PactModule, F extends PactFunctio
 
     commandBuilder.addSignatures(...this.mapSignedSignatures(session.account, response.signedCmd.sigs));
 
-    return send({ cmds: [response.signedCmd] }, 'https://api.testnet.chainweb.com/chainweb/0.0/testnet04/chain/1/pact');
+    return send({ cmds: [response.signedCmd] }, this.apiHost);
     //return commandBuilder.send('https://api.testnet.chainweb.com/chainweb/0.0/testnet04/chain/1/pact');
   }
 
@@ -116,6 +116,10 @@ export class PactAction<M extends PactModule = PactModule, F extends PactFunctio
 
   public get builder(): IPactModules[M][F] {
     return Pact.modules[this._module][this._func];
+  }
+
+  public get apiHost() {
+    return 'https://api.testnet.chainweb.com/chainweb/0.0/testnet04/chain/1/pact';
   }
 
   public get module() {

@@ -2,15 +2,15 @@ import { Command } from '~/src/infrastructure/cqrs/commands';
 import { IActionRequest } from '~/src/infrastructure/cqrs/action-handlers';
 import { IPactDecimal } from '@kadena/types';
 
-export type OfferTokenData = {
-  tokenId: string;
-  seller: string;
+export type MintTokenData = {
+  id: string;
+  account: string;
+  keyset: string;
   amount: IPactDecimal;
-  date: Date;
 };
 
-export default class OfferCommand extends Command<OfferTokenData> {
-  constructor(public readonly actionRequest: IActionRequest<OfferTokenData>) {
+export default class MintTokenCommand extends Command<MintTokenData> {
+  constructor(public readonly actionRequest: IActionRequest<MintTokenData>) {
     super(actionRequest);
   }
 }

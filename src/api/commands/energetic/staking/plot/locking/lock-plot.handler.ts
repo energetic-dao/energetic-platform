@@ -25,18 +25,13 @@ export default class LockPlotHandler
           pred: 'keys-all',
         },
       })
-      .addCap('coin.GAS', pubKey as string)
-      .addCap(
-        'n_fa5008565e171dca599c6accfd71d6006ddecce0.ledger.TRANSFER',
-        pubKey as string,
-        plotId,
-        `k:${pubKey}`,
-        this.getEscrowAccount(plotId),
-        amount,
-      )
-      .addCap('free.energetic-plot-staking-center.STAKE', pubKey as string, plotId, `k:${pubKey}`, () => `(read-keyset "${keyset}")`);
+      .addCap(`${PactModule.COIN}.GAS`, pubKey as string)
+      .addCap(`${PactModule.MARMALADE_LEDGER}.TRANSFER`, pubKey as string, plotId, `k:${pubKey}`, this.getEscrowAccount(plotId), amount)
+      .addCap(`${PactModule.ENERGETIC_PLOT_STAKING_CENTER}.STAKE`, pubKey as string, plotId, `k:${pubKey}`, `(read-keyset "${keyset}")`);
 
-    const response = await this.local(commandBuilder);
+    console.log(commandBuilder);
+
+    const response = await this.send(commandBuilder);
 
     console.log(response);
     // fire event

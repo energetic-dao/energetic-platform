@@ -5,19 +5,24 @@ import { PactModule } from '~/src/infrastructure/pact';
 import { Metadata } from '~/src/infrastructure/cqrs/action-handlers';
 
 @CommandHandler(OfferCommand)
-export default class OfferHandler extends PactAction<PactModule.MARMALADE_LEDGER, 'offer'> implements ICommandHandler<OfferTokenData> {
+export default class OfferHandler extends PactAction<PactModule.MARMALADE_LEDGER, 'sale'> implements ICommandHandler<OfferTokenData> {
   constructor() {
-    super(PactModule.MARMALADE_LEDGER, 'offer');
+    super(PactModule.MARMALADE_LEDGER, 'sale');
   }
 
   async execute({ data }: Command<OfferTokenData>): Promise<void> {
-    const { tokenId, seller, amount } = data;
+    const { tokenId, seller, amount, date } = data;
 
-    const commandBuilder = this.builder(tokenId, seller, amount).addCap('coin.GAS', this.wallet?.session?.account as string); // @todo gas station
+    const publicKey = this.wallet?.session?.account as string;
 
-    const response = await this.send(commandBuilder);
+    const commandBuilder = this.builder(tokenId, seller, amount, date)
+      .addCap(`${PactModule.COIN}.GAS`, publicKey)
+      .addCap(`${PactModule.MARMALADE_LEDGER}.OFFER`, publicKey, tokenId, seller, amount, date);
 
-    console.log(response);
+    console.log(commandBuilder);
+    //const response = await this.send(commandBuilder);
+
+    //console.log(response);
   }
 
   public get type() {
