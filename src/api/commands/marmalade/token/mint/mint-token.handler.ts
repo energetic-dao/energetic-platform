@@ -17,7 +17,7 @@ export default class MintTokenHandler extends PactAction<PactModule.MARMALADE_LE
 
     const commandBuilder = this.builder(id, account, () => `(read-keyset "${keyset}")`, amount)
       .addData({
-        'energetic-admin': {
+        [keyset]: {
           keys: this.wallet.session?.account ? [this.wallet.session?.account] : [],
           pred: 'keys-all',
         },
@@ -33,7 +33,7 @@ export default class MintTokenHandler extends PactAction<PactModule.MARMALADE_LE
       .addCap(`${PactModule.MARMALADE_LEDGER}.MINT`, publicKey, id, account, amount)
       .addCap(`${PactModule.MARMALADE_COLLECTION}.MINT`, publicKey, id)
       .addCap(`${PactModule.MARMALADE_NONE_FUNGIBLE}.MINT`, publicKey, id)
-      .addCap('coin.GAS', publicKey); // @todo gas station
+      .addCap(`${PactModule.COIN}.GAS`, publicKey);
 
     //commandBuilder.code = `(n_fa5008565e171dca599c6accfd71d6006ddecce0.ledger.mint "t:_DJWLzU_Gaw0PEboweeKv9lHGg5AcI_JELdby389IS4" "00ea18feef966289dbd6b9b63ba6161c86fce643a9e684ad0d8e57f68bccd2dc" (read-keyset "energetic-admin") 1.0)`;
 

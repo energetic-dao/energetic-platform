@@ -16,20 +16,20 @@ export default class LockPlotHandler
   async execute({ data }: Command<LockPlotData>): Promise<void> {
     const { plotId, amount, account, keyset } = data;
 
-    const pubKey: string = this.wallet.session?.account as string;
+    const publicKey: string = this.wallet.session?.account as string;
 
     const commandBuilder = this.builder(plotId, amount, account, () => `(read-keyset "${keyset}")`)
       .addData({
         [keyset]: {
-          keys: [pubKey],
+          keys: [publicKey],
           pred: 'keys-all',
         },
       })
-      .addCap(`${PactModule.COIN}.GAS`, pubKey as string)
-      .addCap(`${PactModule.MARMALADE_LEDGER}.TRANSFER`, pubKey as string, plotId, `k:${pubKey}`, this.getEscrowAccount(plotId), amount)
-      .addCap(`${PactModule.ENERGETIC_PLOT_STAKING_CENTER}.STAKE`, pubKey as string, plotId, `k:${pubKey}`, `(read-keyset "${keyset}")`);
+      .addCap(`${PactModule.COIN}.GAS`, publicKey)
+      .addCap(`${PactModule.MARMALADE_LEDGER}.TRANSFER`, publicKey, plotId, `k:${publicKey}`, this.getEscrowAccount(plotId), amount)
+      .addCap(`${PactModule.ENERGETIC_PLOT_STAKING_CENTER}.STAKE`, publicKey, plotId, `k:${publicKey}`, `(read-keyset "${keyset}")`);
 
-    console.log(commandBuilder);
+    //console.log(await this.local(commandBuilder));
 
     const response = await this.send(commandBuilder);
 
@@ -39,7 +39,7 @@ export default class LockPlotHandler
   }
 
   private getEscrowAccount(plotId: string) {
-    return `m:free.energetic-plot-staking-center:${plotId}`;
+    return `u:free.energetic-plot-staking-center.require-PLOT:jzmgmD0LlAOldgM8-FuYlu5Cnz2WGuS-9vw9Qpg0xIU`;
   }
 
   public get type() {

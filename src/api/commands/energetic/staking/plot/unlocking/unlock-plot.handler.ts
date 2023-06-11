@@ -16,13 +16,17 @@ export default class UnlockPlotHandler
   async execute({ data }: Command<UnLockPlotData>): Promise<void> {
     const { plotId, amount, account } = data;
 
-    const pubKey: string = this.wallet.session?.account as string;
+    const publicKey: string = this.wallet.session?.account as string;
 
     const commandBuilder = this.builder(plotId, amount, account)
-      .addCap('coin.GAS', pubKey as string)
-      .addCap('free.energetic-plot-staking-center.UNSTAKE', pubKey as string, plotId, `k:${pubKey}`);
+      .addCap('coin.GAS', publicKey)
+      .addCap('free.energetic-plot-staking-center.UNSTAKE', publicKey, plotId, `k:${publicKey}`)
+      .setMeta({
+        gasLimit: 45000,
+        sender: publicKey,
+      });
 
-    const response = await this.local(commandBuilder);
+    const response = await this.send(commandBuilder);
 
     console.log(response);
     // fire event
