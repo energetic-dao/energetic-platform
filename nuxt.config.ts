@@ -8,6 +8,9 @@ export default defineNuxtConfig({
       // nft-viewer config
       NFT_VIEWER_URL: 'http://localhost:3001',
 
+      // collections
+      collections: ['DEulkJ-qDySv_BFKQvJEj315-x5JdnFObku8DXk4iKI'],
+
       // chainweb config
       NETWORK: 'testnet',
       NETWORK_ID: 'testnet04',
