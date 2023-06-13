@@ -34,7 +34,12 @@ export class PactAction<M extends PactModule = PactModule, F extends PactFunctio
     builtCommand: ICommandBuilder<any> & IPactCommand,
     options: any = { preflight: false, signatureVerification: false },
   ): Promise<any> {
-    const { result } = await builtCommand.local(this.apiHost, options);
+    const { result } = await builtCommand
+      .setMeta({
+        sender: this.wallet?.session?.account as string,
+        gasLimit: 1_000_000,
+      })
+      .local(this.apiHost, options);
 
     if (result.status !== 'success') {
       console.error(result);

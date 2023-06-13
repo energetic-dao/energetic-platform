@@ -1,7 +1,7 @@
 import { IActionBusData, Metadata } from '@/src/infrastructure/cqrs/action-handlers';
 
 export interface IActionBus {
-  execute<Request = any>(actionRequest: Request): Promise<void>;
+  execute<Request = any>(actionRequest: Request): Promise<any>;
 
   execute<Request = any, Response = any>(actionRequest: Request): Promise<Response>;
 }

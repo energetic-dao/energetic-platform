@@ -13,14 +13,12 @@ export default class GetCollectionHandler
     super(PactModule.MARMALADE_COLLECTION, 'get-collection');
   }
 
-  async execute({ data }: Query<GetCollectionData>): Promise<void> {
+  async execute({ data }: Query<GetCollectionData>): Promise<any> {
     const { id } = data;
 
     const commandBuilder = this.builder(id);
 
-    const response = await this.local(commandBuilder);
-
-    console.log(response);
+    return this.local(commandBuilder);
   }
 
   public get type() {

@@ -7,7 +7,7 @@ export class QueryBus extends ActionHandlerBus<QueryBus> implements IActionBus {
     super(Metadata.QUERY);
   }
 
-  async execute<Request>(query: Query<Request>): Promise<void> {
+  async execute<Request>(query: Query<Request>): Promise<any> {
     const queryId = this.getId(query);
 
     if (!queryId) {
