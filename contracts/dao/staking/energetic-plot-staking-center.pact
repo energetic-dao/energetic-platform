@@ -1,21 +1,25 @@
 (namespace "free")
 (module energetic-plot-staking-center GOVERNANCE
 
-  (use free.energetic-manifest-policy)
+  (use free.energetic-plot-item-policy)
+  (use free.energetic-plot-policy)
 
   ;;
-  ;; Schema
+  ;; Schemas
   ;;
 
   (defschema plot-schema
+    plot-id:string
     escrow-account:string
     escrow-guard:guard
     original-owner:string
     account-guard:guard
     locked-since:time
+    locked:bool
+    token-ids:[string]
   )
 
-  (defschema plot-staking-schema
+  (defschema staked-plot-item-schema
     item-id:string
     plot-id:string
     amount:decimal
@@ -30,16 +34,20 @@
     max:decimal
   )
 
-  (deftable plot-table:{plot-schema})
-  (deftable plot-staking-table:{plot-staking-schema})
-  (deftable plot-slot-constant-table:{plot-slot-constant-schema})
+  ;;
+  ;; Tables
+  ;;
+
+  (deftable staked-plots:{plot-schema})
+  (deftable staked-plot-items:{staked-plot-item-schema})
+  (deftable plot-slot-constants:{plot-slot-constant-schema})
 
   ;;
   ;; Constants
   ;;
 
-  (defconst ADMIN_KEYSET (read-keyset "energetic-admin"))
-  (defconst OPERATOR_KEYSET (read-keyset "energetic-operator"))
+  (defconst ADMIN_KEYSET "free.energetic-admin")
+  (defconst OPERATOR_KEYSET "free.energetic-operator")
 
   (defconst SLOT_TYPE_ROOF_SOLAR_PANEL:string "roof-solar-panels")
   (defconst SLOT_TYPE_STANDING_SOLAR_PANEL:string "standing-solar-panel")
@@ -60,27 +68,22 @@
     (enforce-keyset OPERATOR_KEYSET)
   )
 
-  (defcap STAKE:bool (plot-id:string account:string account-guard:guard)
-    (bind (get-token-manifest plot-id)
-      {
-        'type := type
-      }
-      (enforce-guard account-guard)
-      (enforce (= type "plot") "Requires plot type")
-    )
+  (defcap STAKE:bool (plot-id:string account:string escrow-account:string amount:decimal)
+    (compose-capability (PLOT plot-id))
   )
 
   (defcap UNSTAKE:bool (plot-id:string account:string)
-    (with-read plot-table plot-id
+    (with-read staked-plots plot-id
       {
         "account-guard" := guard
       }
+      (compose-capability (PLOT plot-id))
       (enforce-guard guard)
     )
   )
 
   (defcap UPGRADE_PLOT:bool (plot-id:string item-id:string account:string account-guard:guard)
-    (with-read plot-table plot-id
+    (with-read staked-plots plot-id
       {
         "account-guard" := guard,
         "original-owner" := original-owner
@@ -108,7 +111,7 @@
   )
 
   (defun create-plot-guard:guard (plot-id:string)
-    (create-module-guard plot-id)
+    (create-user-guard (require-PLOT plot-id))
   )
 
   (defun create-escrow-account (plot-id:string)
@@ -134,24 +137,32 @@
       (
         (escrow-plot-guard (create-plot-guard plot-id))
         (escrow-account (create-escrow-account plot-id))
+        (is-plot:bool (item-has-policy-active plot-id 'immutable-policies free.energetic-plot-policy))
       )
-      (with-capability (STAKE plot-id account account-guard)
+      (enforce is-plot "Requires plot policy")
+      (with-capability (STAKE plot-id account escrow-account amount)
         (marmalade.ledger.transfer-create plot-id account escrow-account escrow-plot-guard amount)
         ; (coin::create-account escrow-account escrow-plot-guard) ; @todo change to energetic-coin
-        (write plot-table plot-id
+        (write staked-plots plot-id
           {
+            'plot-id: plot-id,
             'escrow-account: escrow-account,
             'escrow-guard: escrow-plot-guard,
             'original-owner: account,
             'account-guard: account-guard,
-            'locked-since: (at 'block-time (chain-data))
+            'locked-since: (at 'block-time (chain-data)),
+            'locked: true,
+            'token-ids: []
           }
         )
         {
+          'plot-id: plot-id,
           'escrow-account: escrow-account,
           'original-owner: account,
           'account-guard: account-guard,
-          'locked-since: (at 'block-time (chain-data))
+          'locked-since: (at 'block-time (chain-data)),
+          'locked: true,
+          'token-ids: []
         }
       )
     )
@@ -164,24 +175,36 @@
         {
           'escrow-account := escrow-account
         }
-        (let
+        (let*
           (
-            (staked-plot-items:[object{plot-staking-schema}] (get-staked-items-on-plot plot-id))
+            (staked-plot:object{plot-schema} (get-plot plot-id))
+            (staked-plot-tokens:[string] (at 'token-ids staked-plot))
             (transfer-staked-item
-              (lambda (staked-item:object)
-                (install-capability (marmalade.ledger.TRANSFER (at 'item-id staked-item) escrow-account account (at 'amount staked-item)))
-                (marmalade.ledger.transfer (at 'item-id staked-item) escrow-account account (at 'amount staked-item))
+              (lambda (staked-item:string)
+                (with-read staked-plot-items (key plot-id staked-item)
+                  {
+                    'amount := staked-amount
+                  }
+                  (install-capability (free.energetic-enumerable-collection-policy.TRANSFER staked-item escrow-account account staked-amount))
+                  (install-capability (marmalade.ledger.TRANSFER staked-item escrow-account account staked-amount))
+                  (marmalade.ledger.transfer staked-item escrow-account account staked-amount)
+                )
               )
             )
           )
-          (map transfer-staked-item staked-plot-items)
+          (if (>= (length staked-plot-tokens) 0)
+            (map transfer-staked-item (distinct staked-plot-tokens))
+            "No staked items on plot"
+          )
+          (install-capability (free.energetic-enumerable-collection-policy.TRANSFER plot-id escrow-account account amount))
           (install-capability (marmalade.ledger.TRANSFER plot-id escrow-account account amount))
           (marmalade.ledger.transfer plot-id escrow-account account amount)
           ; @todo add claim for energetic-coin rewards
 
-          (update plot-table plot-id
+          (update staked-plots plot-id
             {
-              'original-owner: ""
+              'locked: false,
+              'token-ids: []
             }
           )
           true
@@ -192,7 +215,7 @@
 
   (defun upgrade-plot:bool (plot-id:string item-id:string amount:decimal account:string account-guard:guard)
     (with-capability (UPGRADE_PLOT plot-id item-id account account-guard)
-      (bind (get-token-manifest item-id)
+      (bind (get-token-metadata item-id)
         {
           'type := type
         }
@@ -201,18 +224,19 @@
             'escrow-account := escrow-account,
             'escrow-guard := escrow-plot-guard
           }
+          (install-capability (free.energetic-enumerable-collection-policy.TRANSFER item-id account escrow-account amount))
           (install-capability (marmalade.ledger.TRANSFER item-id account escrow-account amount))
           (marmalade.ledger.transfer-create item-id account escrow-account escrow-plot-guard amount)
           (let*
             (
-              (item-has-policy-active:bool (item-has-policy-active item-id 'immutable-policies free.energetic-upgradable-item-policy))
+              (item-has-policy-active:bool (item-has-policy-active item-id 'immutable-policies free.energetic-plot-item-policy))
               (item-max-amount:decimal (get-slot-type-max type))
               (current-staked-amount:decimal (marmalade.ledger.get-balance item-id escrow-account))
             )
             (enforce item-has-policy-active "Invalid item upgrade")
             (enforce (<= current-staked-amount item-max-amount) (format "Amount can max be {}" [item-max-amount]))
 
-            (write plot-staking-table (key plot-id item-id)
+            (write staked-plot-items (key plot-id item-id)
               {
                 'plot-id: plot-id,
                 'item-id: item-id,
@@ -222,6 +246,20 @@
                 'account-guard: account-guard,
                 'locked-since: (at 'block-time (chain-data))
               }
+            )
+
+            (with-default-read staked-plots plot-id
+              {
+                'token-ids: []
+              }
+              {
+                'token-ids := token-ids
+              }
+              (update staked-plots plot-id
+                {
+                  'token-ids: (+ token-ids (make-list (round amount) item-id))
+                }
+              )
             )
             true
           )
@@ -242,7 +280,7 @@
           (has-valid-slot-type (contains type SLOT_TYPES))
         )
         (enforce has-valid-slot-type "Invalid slot type")
-        (write plot-slot-constant-table type-hash
+        (write plot-slot-constants type-hash
           {
             'type: type,
             'max: max
@@ -261,24 +299,31 @@
   ;;
 
   (defun get-plot:object{plot-schema} (plot-id:string)
-    (with-read plot-table plot-id
+    (with-read staked-plots plot-id
       {
         'escrow-account := escrow-account,
         'escrow-guard := escrow-guard,
         'original-owner := original-owner,
-        'account-guard := account-guard
+        'account-guard := account-guard,
+        'locked-since := locked-since,
+        'locked := locked,
+        'token-ids := token-ids
       }
       {
+        'plot-id: plot-id,
         'escrow-account: escrow-account,
         'escrow-guard: escrow-guard,
         'original-owner: original-owner,
-        'account-guard: account-guard
+        'account-guard: account-guard,
+        'locked-since: locked-since,
+        'locked: locked,
+        'token-ids: token-ids
       }
     )
   )
 
   (defun get-slot-type-max:decimal (type:string)
-    (with-read plot-slot-constant-table (hash type)
+    (with-read plot-slot-constants (hash type)
       {
         'max := max
       }
@@ -290,26 +335,55 @@
     (contains policy (at policy-type (at 'policies (marmalade.ledger.get-token-info token-id))))
   )
 
-  (defun get-staked-items-on-plot:object{plot-staking-schema} (plot-id:string)
-    (select plot-staking-table
-      [
-        'plot-id,
-        'item-id,
-        'amount,
-        'type,
-        'account,
-        'locked-since
-      ]
-      (where 'plot-id (= plot-id))
+  (defun get-plot-info:object (plot:object{plot-schema})
+    (+
+      {
+        'locked: (at 'locked plot)
+      }
+      (marmalade.ledger.get-token-info (at 'plot-id plot))
     )
   )
-)
 
-(if (read-msg 'upgrade )
-  ["upgrade complete"]
-  [
-    (create-table plot-table)
-    (create-table plot-staking-table)
-    (create-table plot-slot-constant-table)
-  ]
+  (defun get-staked-plots (account:string)
+    (map (get-plot-info)
+      (select staked-plots
+        [
+          'plot-id,
+          'locked
+        ]
+        (and?
+          (where 'locked (= true))
+          (where 'original-owner (= account))
+        )
+      )
+    )
+  )
+
+  (defun get-staked-items-on-plot:object{staked-plot-item-schema} (plot-id:string)
+    (with-read staked-plots plot-id
+      {
+        'token-ids := token-ids
+      }
+      (map (lambda (token-id:string)
+        (with-read staked-plot-items (key plot-id token-id)
+          {
+            'plot-id := plot-id,
+            'item-id := item-id,
+            'amount := amount,
+            'type := type,
+            'account := account,
+            'locked-since := locked-since
+          }
+          {
+            'plot-id: plot-id,
+            'item-id: item-id,
+            'amount: amount,
+            'type: type,
+            'account: account,
+            'locked-since: locked-since
+          }
+        )
+      ) (distinct token-ids))
+    )
+  )
 )
