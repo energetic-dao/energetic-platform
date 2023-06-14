@@ -29,8 +29,6 @@ export default class UnlockPlotHandler
     const response = await this.send(commandBuilder);
 
     console.log(response);
-    // fire event
-    return response;
   }
 
   public get type() {

@@ -12,13 +12,13 @@
     <p>
       Items <span class="font-bold">{{ collection.size.int }} / {{ collection['max-size'].int }}</span>
     </p>
-    <p>
+    <!--<p>
       Created
       <span class="font-bold">
         {{ new Date().toLocaleDateString() }}
       </span>
     </p>
-    <p>Royalty <span class="font-bold">2.5%</span></p>
+    <p>Royalty <span class="font-bold">2.5%</span></p>-->
     <!--      <p>Chain <span class="font-bold">Kadena</span></p>-->
   </div>
   <div class="flex flex-col flex-grow overflow-hidden">

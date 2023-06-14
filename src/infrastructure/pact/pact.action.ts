@@ -42,14 +42,16 @@ export class PactAction<M extends PactModule = PactModule, F extends PactFunctio
       .local(this.apiHost, options);
 
     if (result.status !== 'success') {
-      console.error(result);
       throw new Error(`Pact command failed: ${result.status}`);
     }
 
+    console.log(result.data);
     return result.data;
   }
 
   public async send(commandBuilder: ICommandBuilder<any> & IPactCommand): Promise<IRequestKeys> {
+    await this.local(commandBuilder);
+
     const { provider, session } = this.wallet;
 
     if (!provider || !session) {
@@ -60,6 +62,7 @@ export class PactAction<M extends PactModule = PactModule, F extends PactFunctio
       {
         sender: 'k:' + session.account,
         chainId: '1',
+        gasLimit: 10000,
       },
       'testnet04',
     );

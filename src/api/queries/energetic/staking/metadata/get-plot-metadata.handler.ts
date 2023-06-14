@@ -13,14 +13,12 @@ export default class GetCollectionHandler
     super(PactModule.ENERGETIC_PLOT_STAKING_CENTER, 'get-staked-items-on-plot');
   }
 
-  async execute({ data }: Query<GetPlotMetadataData>): Promise<void> {
+  async execute({ data }: Query<GetPlotMetadataData>): Promise<any> {
     const { plotId } = data;
 
     const commandBuilder = this.builder(plotId);
 
-    const response = await this.local(commandBuilder);
-
-    console.log(response);
+    return this.local(commandBuilder);
   }
 
   public get type() {

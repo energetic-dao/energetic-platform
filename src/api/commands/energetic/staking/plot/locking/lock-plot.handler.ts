@@ -27,19 +27,30 @@ export default class LockPlotHandler
       })
       .addCap(`${PactModule.COIN}.GAS`, publicKey)
       .addCap(`${PactModule.MARMALADE_LEDGER}.TRANSFER`, publicKey, plotId, `k:${publicKey}`, this.getEscrowAccount(plotId), amount)
-      .addCap(`${PactModule.ENERGETIC_PLOT_STAKING_CENTER}.STAKE`, publicKey, plotId, `k:${publicKey}`, `(read-keyset "${keyset}")`);
-
-    //console.log(await this.local(commandBuilder));
+      .addCap(
+        `${PactModule.ENERGETIC_ENUMERABLE_COLLECTION_POLICY}.TRANSFER`,
+        publicKey,
+        plotId,
+        `k:${publicKey}`,
+        this.getEscrowAccount(plotId),
+        amount,
+      )
+      .addCap(
+        `${PactModule.ENERGETIC_PLOT_STAKING_CENTER}.STAKE`,
+        publicKey,
+        plotId,
+        `k:${publicKey}`,
+        `(read-keyset "${keyset}")`,
+        amount,
+      );
 
     const response = await this.send(commandBuilder);
 
     console.log(response);
-    // fire event
-    return response;
   }
 
   private getEscrowAccount(plotId: string) {
-    return `u:free.energetic-plot-staking-center.require-PLOT:jzmgmD0LlAOldgM8-FuYlu5Cnz2WGuS-9vw9Qpg0xIU`;
+    return `u:free.energetic-plot-staking-center.require-PLOT:1m-owfR31hnV2sHtI5orWb6549fqIPGQfFPHHqcsA6o`;
   }
 
   public get type() {
