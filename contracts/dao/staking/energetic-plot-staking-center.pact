@@ -68,7 +68,7 @@
     (enforce-keyset OPERATOR_KEYSET)
   )
 
-  (defcap STAKE:bool (plot-id:string account:string escrow-account:string amount:decimal)
+  (defcap STAKE:bool (plot-id:string account:string amount:decimal)
     (compose-capability (PLOT plot-id))
   )
 

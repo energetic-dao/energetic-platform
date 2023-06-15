@@ -25,34 +25,15 @@ export default class CreateTokenHandler
       .addCap(`${PactModule.MARMALADE_COLLECTION}.OPERATOR`, publicKey, collectionId)
       .addCap('coin.GAS', publicKey); // @todo gas station
 
-    commandBuilder.code = `(${PactModule.MARMALADE_LEDGER}.create-token "${id}" ${precision.int} "${uri}" ${JSON.stringify(
-      policies,
-    ).replace(
-      '["free.energetic-plot-policy","free.energetic-enumerable-collection-policy"]',
-      '[free.energetic-plot-policy,free.energetic-enumerable-collection-policy]',
-    )})`;
+    commandBuilder.code = `(${PactModule.MARMALADE_LEDGER}.create-token "${id}" ${precision.int} "${uri}" {"concrete-policies":{"quote-policy":false,"non-fungible-policy":false,"royalty-policy":false,"collection-policy":true},"immutable-policies":[free.energetic-enumerable-collection-policy, free.energetic-plot-item-policy],"adjustable-policies":[]})`;
 
-    /*
-      (n_fa5008565e171dca599c6accfd71d6006ddecce0.ledger.mint "t:nEesEk7AkcRz8SPhNXyCZMc2tN6xgwEfztq8_ZwlyVU"
-      "k:00ea18feef966289dbd6b9b63ba6161c86fce643a9e684ad0d8e57f68bccd2dc"
-      (read-keyset "energetic-admin")
-       1.0)
-
-     */
-
-    console.log(commandBuilder);
-    // console.log(
-    //   JSON.stringify({
-    //     'concrete-policies': {
-    //       'quote-policy': true,
-    //       'non-fungible-policy': true,
-    //       'royalty-policy': false,
-    //       'collection-policy': true,
-    //     },
-    //     'immutable-policies': ['free.energetic-plot-policy'],
-    //     'adjustable-policies': [],
-    //   }),
-    // );
+    console.log(JSON.stringify(policies));
+    console.log(
+      JSON.stringify(policies).replace(
+        '["free.energetic-enumerable-collection-policy"]',
+        '[free.energetic-enumerable-collection-policy, free.energetic-plot-item-policy]',
+      ),
+    );
 
     const response = await this.send(commandBuilder);
 

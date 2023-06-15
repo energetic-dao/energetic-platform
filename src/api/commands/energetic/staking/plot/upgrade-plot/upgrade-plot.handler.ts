@@ -14,26 +14,31 @@ export default class UpgradePlotHandler
   }
 
   async execute({ data }: Command<UpgradePlotData>): Promise<void> {
-    const { plotId, itemId, amount, account, keyset } = data;
+    const { plotId, itemId, amount, account, escrowAccount } = data;
 
-    const pubKey: string = this.wallet.session?.account as string;
+    const publicKey: string = this.wallet.session?.account as string;
 
-    const commandBuilder = this.builder(plotId, itemId, amount, account, () => `(read-keyset "${keyset}")`)
-      .addCap('coin.GAS', pubKey as string)
-      .addCap(
-        'free.energetic-plot-staking-center.UPGRADE_PLOT',
-        pubKey as string,
-        plotId,
-        itemId,
-        account,
-        () => `(read-keyset "${keyset}")`,
-      );
+    const commandBuilder = this.builder(plotId, itemId, amount, account, () => `(read-keyset "${publicKey}")`)
+      .addData({
+        [publicKey]: {
+          keys: [publicKey],
+          pred: 'keys-all',
+        },
+      })
+      .addCap('coin.GAS', publicKey as string)
+      .addCap(`${PactModule.MARMALADE_LEDGER}.TRANSFER`, publicKey, itemId, `k:${publicKey}`, escrowAccount, amount)
+      .addCap(`${PactModule.ENERGETIC_ENUMERABLE_COLLECTION_POLICY}.TRANSFER`, publicKey, itemId, `k:${publicKey}`, escrowAccount, amount)
+      .addCap(`${PactModule.ENERGETIC_PLOT_STAKING_CENTER}.UPGRADE_PLOT`, publicKey as string, plotId, itemId, account, {
+        keys: [publicKey],
+        pred: 'keys-all',
+      });
 
-    const response = await this.local(commandBuilder);
+    console.log(commandBuilder);
+
+    const response = await this.send(commandBuilder);
 
     console.log(response);
     // fire event
-    return response;
   }
 
   public get type() {

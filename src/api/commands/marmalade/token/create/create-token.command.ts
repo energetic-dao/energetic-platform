@@ -18,7 +18,7 @@ export type Policy = {
 export type EnvData = {
   'collection-id': string;
   'cp-mint-guard': Guard;
-  'nfp-mint-guard': Guard;
+  //'nfp-mint-guard': Guard;
   [key: string]: any;
 };
 

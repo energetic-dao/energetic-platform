@@ -84,20 +84,20 @@ const collectionForm = ref<CreateCollectionData>({
 });
 
 const tokenForm = ref<CreateTokenData>({
-  id: 't:5zk8dgUtJ_gu-Lh9EvXBsUZ-MwuS5lESf-64WI_wWoo',
-  collectionId: 'collection:DEulkJ-qDySv_BFKQvJEj315-x5JdnFObku8DXk4iKI',
+  id: 't:I5G9jLkOMS1Zm8OZV4ahHrhzOYEfJmRZvPA_d1R9hzw',
+  collectionId: 'collection:XHWZVc77jHiIcSXZoM9bSNSCM9dtBdh1TcHTgqiO86s',
   precision: {
     int: '0',
   },
-  uri: 'ipfs://QmXZr5MD8MG2thzCd4zNegDiMDGLaBuFky2VUsd4o8cznQ/3.json',
+  uri: 'ipfs://QmTxKi21tNyoDJDq2bUHPkcE4h3az3LAPdHvTbbXzWos3z',
   policies: {
     'concrete-policies': {
       'quote-policy': false,
-      'non-fungible-policy': true,
+      'non-fungible-policy': false,
       'royalty-policy': false,
       'collection-policy': true,
     },
-    'immutable-policies': ['free.energetic-plot-policy'],
+    'immutable-policies': ['free.energetic-enumerable-collection-policy'],
     'adjustable-policies': [],
   },
 });
@@ -138,7 +138,11 @@ const createCollectionToken = async () => {
             keys: getSession?.value?.account ? [getSession?.value?.account] : [],
             pred: 'keys-all',
           },
-          'nfp-mint-guard': {
+          // 'nfp-mint-guard': {
+          //   keys: getSession?.value?.account ? [getSession?.value?.account] : [],
+          //   pred: 'keys-all',
+          // },
+          'item-metadata-guard': {
             keys: getSession?.value?.account ? [getSession?.value?.account] : [],
             pred: 'keys-all',
           },
@@ -146,8 +150,12 @@ const createCollectionToken = async () => {
             keys: getSession?.value?.account ? [getSession?.value?.account] : [],
             pred: 'keys-all',
           },
-          token: {
-            index: '3',
+          // token: {
+          //   index: '3',
+          // },
+          'item-metadata': {
+            'power-rate': { decimal: '5.0' },
+            type: 'wind-turbine',
           },
         },
       },

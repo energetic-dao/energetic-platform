@@ -14,43 +14,25 @@ export default class LockPlotHandler
   }
 
   async execute({ data }: Command<LockPlotData>): Promise<void> {
-    const { plotId, amount, account, keyset } = data;
+    const { plotId, amount, account, escrowAccount } = data;
 
     const publicKey: string = this.wallet.session?.account as string;
 
-    const commandBuilder = this.builder(plotId, amount, account, () => `(read-keyset "${keyset}")`)
+    const commandBuilder = this.builder(plotId, amount, account, () => `(read-keyset "${publicKey}")`)
       .addData({
-        [keyset]: {
+        [publicKey]: {
           keys: [publicKey],
           pred: 'keys-all',
         },
       })
       .addCap(`${PactModule.COIN}.GAS`, publicKey)
-      .addCap(`${PactModule.MARMALADE_LEDGER}.TRANSFER`, publicKey, plotId, `k:${publicKey}`, this.getEscrowAccount(plotId), amount)
-      .addCap(
-        `${PactModule.ENERGETIC_ENUMERABLE_COLLECTION_POLICY}.TRANSFER`,
-        publicKey,
-        plotId,
-        `k:${publicKey}`,
-        this.getEscrowAccount(plotId),
-        amount,
-      )
-      .addCap(
-        `${PactModule.ENERGETIC_PLOT_STAKING_CENTER}.STAKE`,
-        publicKey,
-        plotId,
-        `k:${publicKey}`,
-        `(read-keyset "${keyset}")`,
-        amount,
-      );
+      .addCap(`${PactModule.MARMALADE_LEDGER}.TRANSFER`, publicKey, plotId, `k:${publicKey}`, escrowAccount, amount)
+      .addCap(`${PactModule.ENERGETIC_ENUMERABLE_COLLECTION_POLICY}.TRANSFER`, publicKey, plotId, `k:${publicKey}`, escrowAccount, amount)
+      .addCap(`${PactModule.ENERGETIC_PLOT_STAKING_CENTER}.STAKE`, publicKey, plotId, `k:${publicKey}`, amount);
 
     const response = await this.send(commandBuilder);
 
     console.log(response);
-  }
-
-  private getEscrowAccount(plotId: string) {
-    return `u:free.energetic-plot-staking-center.require-PLOT:1m-owfR31hnV2sHtI5orWb6549fqIPGQfFPHHqcsA6o`;
   }
 
   public get type() {

@@ -1,7 +1,7 @@
 import { ICommandBuilder, IPactCommand, IPactModules, IPublicMeta, Pact } from '@kadena/client';
 import { useWallet } from '~/src/stores/wallet.store';
 import { ICap, ISignatureJson, ISigningCap, ISigningRequest } from '@kadena/types';
-import { IRequestKeys, send, local } from '@kadena/chainweb-node-client';
+import { IRequestKeys, send } from '@kadena/chainweb-node-client';
 
 type PactModule = keyof IPactModules;
 type PactFunction<T extends keyof IPactModules> = keyof IPactModules[T];

@@ -6,7 +6,7 @@ export type LockPlotData = {
   plotId: string;
   amount: IPactDecimal;
   account: string;
-  keyset: string;
+  escrowAccount: string;
 };
 
 export default class LockPlotCommand extends Command<LockPlotData> {

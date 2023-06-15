@@ -7,7 +7,7 @@ export type UpgradePlotData = {
   itemId: string;
   amount: IPactDecimal;
   account: string;
-  keyset: string;
+  escrowAccount: string;
 };
 
 export default class UpgradePlotCommand extends Command<UpgradePlotData> {
