@@ -1,6 +1,6 @@
 import 'reflect-metadata';
 import { ActionHandlerBus, IActionBus, Metadata } from '@/src/infrastructure/cqrs/action-handlers';
-import { Query } from '~/src/infrastructure/cqrs/queries';
+import { Query } from '@/src/infrastructure/cqrs/queries';
 
 export class QueryBus extends ActionHandlerBus<QueryBus> implements IActionBus {
   constructor() {

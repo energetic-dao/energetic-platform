@@ -2,14 +2,15 @@ import { Command } from '@/src/infrastructure/cqrs/commands';
 import { IActionRequest } from '@/src/infrastructure/cqrs/action-handlers';
 import { IPactDecimal } from '@kadena/types';
 
-export type UnLockPlotData = {
+export type UnlockPlotItemData = {
   plotId: string;
+  tokenId: string;
   amount: IPactDecimal;
   account: string;
 };
 
-export default class UnlockPlotCommand extends Command<UnLockPlotData> {
-  constructor(public readonly actionRequest: IActionRequest<UnLockPlotData>) {
+export default class UnlockPlotItemCommand extends Command<UnlockPlotItemData> {
+  constructor(public readonly actionRequest: IActionRequest<UnlockPlotItemData>) {
     super(actionRequest);
   }
 }

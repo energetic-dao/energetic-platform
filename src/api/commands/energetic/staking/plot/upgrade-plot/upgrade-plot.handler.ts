@@ -1,8 +1,8 @@
-import { Command, CommandHandler, ICommandHandler } from '~/src/infrastructure/cqrs/commands';
-import { PactAction } from '~/src/infrastructure/pact/pact.action';
-import { PactModule } from '~/src/infrastructure/pact';
-import { Metadata } from '~/src/infrastructure/cqrs/action-handlers';
-import UpgradePlotCommand, { UpgradePlotData } from '~/src/api/commands/energetic/staking/plot/upgrade-plot/upgrade-plot.command';
+import { Command, CommandHandler, ICommandHandler } from '@/src/infrastructure/cqrs/commands';
+import { PactAction } from '@/src/infrastructure/pact/pact.action';
+import { PactModule } from '@/src/infrastructure/pact';
+import { Metadata } from '@/src/infrastructure/cqrs/action-handlers';
+import UpgradePlotCommand, { UpgradePlotData } from '@/src/api/commands/energetic/staking/plot/upgrade-plot/upgrade-plot.command';
 
 @CommandHandler(UpgradePlotCommand)
 export default class UpgradePlotHandler
@@ -25,15 +25,13 @@ export default class UpgradePlotHandler
           pred: 'keys-all',
         },
       })
-      .addCap('coin.GAS', publicKey as string)
+      //.addCap('coin.GAS', publicKey as string)
       .addCap(`${PactModule.MARMALADE_LEDGER}.TRANSFER`, publicKey, itemId, `k:${publicKey}`, escrowAccount, amount)
       .addCap(`${PactModule.ENERGETIC_ENUMERABLE_COLLECTION_POLICY}.TRANSFER`, publicKey, itemId, `k:${publicKey}`, escrowAccount, amount)
       .addCap(`${PactModule.ENERGETIC_PLOT_STAKING_CENTER}.UPGRADE_PLOT`, publicKey as string, plotId, itemId, account, {
         keys: [publicKey],
         pred: 'keys-all',
       });
-
-    console.log(commandBuilder);
 
     const response = await this.send(commandBuilder);
 

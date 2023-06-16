@@ -1,5 +1,5 @@
-import { Command } from '~/src/infrastructure/cqrs/commands';
-import { IActionRequest } from '~/src/infrastructure/cqrs/action-handlers';
+import { Command } from '@/src/infrastructure/cqrs/commands';
+import { IActionRequest } from '@/src/infrastructure/cqrs/action-handlers';
 import { IPactDecimal } from '@kadena/types';
 
 export type OfferTokenData = {

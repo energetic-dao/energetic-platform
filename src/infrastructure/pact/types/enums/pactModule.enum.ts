@@ -7,4 +7,5 @@ export enum PactModule {
   ENERGETIC_ENUMERABLE_COLLECTION_POLICY = 'free.energetic-enumerable-collection-policy',
   ENERGETIC_PLOT_POLICY = 'free.energetic-plot-policy',
   ENERGETIC_PLOT_ITEM_POLICY = 'free.energetic-plot-item-policy',
+  ENERGETIC_GAS_STATION = 'free.energetic-gas-station',
 }

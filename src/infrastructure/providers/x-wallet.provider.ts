@@ -1,5 +1,5 @@
-import { KADENA_CHAIN, Provider, Session } from '~/src/infrastructure/types/wallets';
-import { ConnectWallet, Response, Integrator, Method } from '~/src/infrastructure/types/wallets/x-wallet';
+import { KADENA_CHAIN, Provider, Session } from '@/src/infrastructure/types/wallets';
+import { ConnectWallet, Response, Integrator, Method } from '@/src/infrastructure/types/wallets/x-wallet';
 export class XWalletProvider implements Provider {
   private readonly wallet: Integrator;
   private _network: KADENA_CHAIN;

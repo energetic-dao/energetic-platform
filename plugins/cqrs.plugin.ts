@@ -1,6 +1,6 @@
 import { CommandBus } from '@/src/infrastructure/cqrs/commands';
-import { QueryBus } from '~/src/infrastructure/cqrs/queries';
-import { ActionHandlerBus, Metadata, Type } from '~/src/infrastructure/cqrs/action-handlers';
+import { QueryBus } from '@/src/infrastructure/cqrs/queries';
+import { ActionHandlerBus, Metadata, Type } from '@/src/infrastructure/cqrs/action-handlers';
 
 const modules: Record<string, { default: Component }> = import.meta.glob(['../**/*.handler.ts'], {
   eager: true,

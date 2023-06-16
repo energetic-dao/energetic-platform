@@ -1,8 +1,8 @@
-import { Command, CommandHandler, ICommandHandler } from '~/src/infrastructure/cqrs/commands';
-import { PactAction } from '~/src/infrastructure/pact/pact.action';
-import WithdrawCommand, { WithdrawTokenData } from '~/src/api/commands/marmalade/marketplace/withdraw/withdraw.command';
-import { PactModule } from '~/src/infrastructure/pact';
-import { Metadata } from '~/src/infrastructure/cqrs/action-handlers';
+import { Command, CommandHandler, ICommandHandler } from '@/src/infrastructure/cqrs/commands';
+import { PactAction } from '@/src/infrastructure/pact/pact.action';
+import WithdrawCommand, { WithdrawTokenData } from '@/src/api/commands/marmalade/marketplace/withdraw/withdraw.command';
+import { PactModule } from '@/src/infrastructure/pact';
+import { Metadata } from '@/src/infrastructure/cqrs/action-handlers';
 
 @CommandHandler(WithdrawCommand)
 export default class WithdrawHandler

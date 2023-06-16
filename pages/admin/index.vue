@@ -66,10 +66,10 @@
 </template>
 
 <script setup lang="ts">
-import CreateCollectionCommand, { CreateCollectionData } from '~/src/api/commands/marmalade/collection/create/create-collection.command';
-import CreateTokenCommand, { CreateTokenData } from '~/src/api/commands/marmalade/token/create/create-token.command';
-import { useWallet } from '~/src/stores/wallet.store';
-import MintTokenCommand, { MintTokenData } from '~/src/api/commands/marmalade/token/mint/mint-token.command';
+import CreateCollectionCommand, { CreateCollectionData } from '@/src/api/commands/marmalade/collection/create/create-collection.command';
+import CreateTokenCommand, { CreateTokenData } from '@/src/api/commands/marmalade/token/create/create-token.command';
+import { useWallet } from '@/src/stores/wallet.store';
+import MintTokenCommand, { MintTokenData } from '@/src/api/commands/marmalade/token/mint/mint-token.command';
 
 const { $commandBus } = useNuxtApp();
 const walletStore = useWallet();
@@ -84,23 +84,25 @@ const collectionForm = ref<CreateCollectionData>({
 });
 
 const tokenForm = ref<CreateTokenData>({
-  id: 't:I5G9jLkOMS1Zm8OZV4ahHrhzOYEfJmRZvPA_d1R9hzw',
-  collectionId: 'collection:XHWZVc77jHiIcSXZoM9bSNSCM9dtBdh1TcHTgqiO86s',
+  id: 't:szmYq6psOVYk3TqFRyKoOGnL2EgkPKMUASaHMYjDhyU',
+  collectionId: 'collection:DEulkJ-qDySv_BFKQvJEj315-x5JdnFObku8DXk4iKI',
   precision: {
     int: '0',
   },
-  uri: 'ipfs://QmTxKi21tNyoDJDq2bUHPkcE4h3az3LAPdHvTbbXzWos3z',
+  uri: 'ipfs://QmXZr5MD8MG2thzCd4zNegDiMDGLaBuFky2VUsd4o8cznQ/20.json',
   policies: {
     'concrete-policies': {
       'quote-policy': false,
-      'non-fungible-policy': false,
+      'non-fungible-policy': true,
       'royalty-policy': false,
       'collection-policy': true,
     },
-    'immutable-policies': ['free.energetic-enumerable-collection-policy'],
+    'immutable-policies': ['free.energetic-plot-policy'],
     'adjustable-policies': [],
   },
 });
+
+// free.energetic-plot-policy,free.energetic-enumerable-collection-policy
 
 const mintForm = ref<MintTokenData>({
   id: 't:GsbbZnpeqNcrgsER2a3sDiB_Yo4U-UdousDOFzurxN0',
@@ -138,10 +140,10 @@ const createCollectionToken = async () => {
             keys: getSession?.value?.account ? [getSession?.value?.account] : [],
             pred: 'keys-all',
           },
-          // 'nfp-mint-guard': {
-          //   keys: getSession?.value?.account ? [getSession?.value?.account] : [],
-          //   pred: 'keys-all',
-          // },
+          'nfp-mint-guard': {
+            keys: getSession?.value?.account ? [getSession?.value?.account] : [],
+            pred: 'keys-all',
+          },
           'item-metadata-guard': {
             keys: getSession?.value?.account ? [getSession?.value?.account] : [],
             pred: 'keys-all',
@@ -150,13 +152,13 @@ const createCollectionToken = async () => {
             keys: getSession?.value?.account ? [getSession?.value?.account] : [],
             pred: 'keys-all',
           },
-          // token: {
-          //   index: '3',
-          // },
-          'item-metadata': {
-            'power-rate': { decimal: '5.0' },
-            type: 'wind-turbine',
+          token: {
+            index: '10',
           },
+          // 'item-metadata': {
+          //   'power-rate': { decimal: '5.0' },
+          //   type: 'wind-turbine',
+          // },
         },
       },
     }),

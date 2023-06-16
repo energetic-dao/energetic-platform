@@ -1,17 +1,17 @@
 <template>
-  <div class="flex flex-row items-center">
+  <div class="flex flex-row items-center" v-if="!isLoading">
     <h1 class="text-4xl capitalize font-bold">{{ collection.name }}</h1>
-    <div class="flex-grow flex justify-end gap-2">
+    <!--<div class="flex-grow flex justify-end gap-2">
       <a>1</a>
       <a>2</a>
       <a>3</a>
       <a>4</a>
-    </div>
+    </div>-->
   </div>
   <div class="flex flex-row gap-2">
-    <p>
+    <!--    <p>
       Items <span class="font-bold">{{ collection.size.int }} / {{ collection['max-size'].int }}</span>
-    </p>
+    </p>-->
     <!--<p>
       Created
       <span class="font-bold">
@@ -49,21 +49,24 @@
           </ul>
         </div>
       </aside>-->
-      <div class="flex flex-row flex-wrap gap-2 w-10/12 overflow-y-auto">
+      <div class="flex flex-row flex-wrap gap-2 overflow-y-auto">
         <div
           v-for="(token, index) of collectionTokens"
-          @click.prevent="$router.push(`/collections/${route.params.id}/tokens/${token.info.id.split(':')[1]}`)"
+          :key="index"
+          @click.prevent="$router.push(`/collections/${route.params.id}/tokens/${token.id.split(':')[1]}`)"
           class="flex flex-col h-20 cursor-pointer"
         >
-          <img
+          <iframe
+            v-if="route.params.id === 'DEulkJ-qDySv_BFKQvJEj315-x5JdnFObku8DXk4iKI'"
             class="rounded w-48"
-            src="https://image-optimizer.jpgstoreapis.com/QmTd1MGtLmRRBQERQduDFFZ5B9yjwzZDkvW4C4CUnh5LXd?width=600"
+            :src="getAssetUrl(token.id)"
           />
+          <img v-else class="rounded w-48" :src="getIpfsUrl(token.metadata.image)" />
           <div class="p-2 bg-primary-300 w-48 rounded-b">
-            <h2 class="text-2xl">Energetic Collection #{{ index }}</h2>
+            <h2 class="text-lg">{{ token.metadata.name }}</h2>
             <div class="flex flex-col">
-              <span class="text-sm">Description</span>
-              <span class="text-sm">Floor price: <span class="font-bold">100 KDA</span> </span>
+              <span class="text-xs">{{ token.metadata.collection.name }}</span>
+              <span class="text-xs">Supply: {{ token.supply }}</span>
             </div>
           </div>
         </div>
@@ -74,8 +77,9 @@
 
 <script setup lang="ts">
 import { useRoute } from 'vue-router';
-import GetCollectionTokensQuery from '~/src/api/queries/energetic/policies/enumerable-collection/get-collection-tokens/get-collection-tokens.query';
-import GetCollectionQuery from '~/src/api/queries/marmalade/collection/get/get-collection.query';
+import GetCollectionTokensQuery from '@/src/api/queries/energetic/policies/enumerable-collection/get-collection-tokens/get-collection-tokens.query';
+import GetCollectionQuery from '@/src/api/queries/marmalade/collection/get/get-collection.query';
+import { addTokenMetadata, getAssetUrl, getIpfsUrl } from '~/src/utils';
 
 enum CollectionType {
   fungible = 'fungible',
@@ -86,6 +90,7 @@ const { $queryBus } = useNuxtApp();
 
 const route = useRoute();
 
+const isLoading = ref<boolean>(true);
 const collection = ref<any>();
 const collectionTokens = ref<any[]>([]);
 
@@ -109,13 +114,16 @@ onBeforeMount(async () => {
       },
     }),
   );
-  collectionTokens.value = await $queryBus.execute(
+  const tokens = await $queryBus.execute(
     new GetCollectionTokensQuery({
       data: {
         collectionId: `collection:${route.params.id as string}`,
       },
     }),
   );
+
+  collectionTokens.value = await Promise.all(addTokenMetadata(tokens));
+  isLoading.value = false;
 });
 </script>
 

@@ -1,4 +1,4 @@
-import { Provider, Session, KADENA_CHAIN, KADENA_METHOD } from '~/src/infrastructure/types/wallets';
+import { Provider, Session, KADENA_CHAIN, KADENA_METHOD } from '@/src/infrastructure/types/wallets';
 import Client, { SignClient } from '@walletconnect/sign-client';
 import { ISigningRequest } from '@kadena/types';
 import { Web3Modal } from '@web3modal/standalone';

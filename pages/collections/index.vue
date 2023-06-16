@@ -1,7 +1,6 @@
 <template>
   <h1 class="text-3xl font-bold mb-2">Collections</h1>
   <div class="flex flex-row">
-    <button>Filters</button>
     <form class="mx-2 flex-grow">
       <label for="search" class="sr-only">Search</label>
       <div class="relative w-full">
@@ -30,7 +29,6 @@
         />
       </div>
     </form>
-    <button>dropdown</button>
   </div>
   <div class="flex flex-row flex-wrap gap-2 mt-2 items-center justify-center md:justify-start overflow-y-auto">
     <collection-card v-for="(collection, index) of config.collections" :key="index" :collection-id="collection" />
@@ -38,7 +36,7 @@
 </template>
 
 <script setup lang="ts">
-import CollectionCard from '~/src/components/collection/collection-card.vue';
+import CollectionCard from '@/src/components/collection/collection-card.vue';
 
 const { public: config } = useRuntimeConfig();
 </script>

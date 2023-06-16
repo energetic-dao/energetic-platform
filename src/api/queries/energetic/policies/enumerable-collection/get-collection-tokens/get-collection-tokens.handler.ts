@@ -1,10 +1,10 @@
-import { PactAction } from '~/src/infrastructure/pact/pact.action';
-import { PactModule } from '~/src/infrastructure/pact';
-import { Metadata } from '~/src/infrastructure/cqrs/action-handlers';
-import { IQueryHandler, Query, QueryHandler } from '~/src/infrastructure/cqrs/queries';
+import { PactAction } from '@/src/infrastructure/pact/pact.action';
+import { PactModule } from '@/src/infrastructure/pact';
+import { Metadata } from '@/src/infrastructure/cqrs/action-handlers';
+import { IQueryHandler, Query, QueryHandler } from '@/src/infrastructure/cqrs/queries';
 import GetCollectionTokensQuery, {
   GetCollectionTokenData,
-} from '~/src/api/queries/energetic/policies/enumerable-collection/get-collection-tokens/get-collection-tokens.query';
+} from '@/src/api/queries/energetic/policies/enumerable-collection/get-collection-tokens/get-collection-tokens.query';
 
 @QueryHandler(GetCollectionTokensQuery)
 export default class GetCollectionTokensHandler

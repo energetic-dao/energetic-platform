@@ -2,18 +2,20 @@ import { PactAction } from '@/src/infrastructure/pact/pact.action';
 import { PactModule } from '@/src/infrastructure/pact';
 import { Metadata } from '@/src/infrastructure/cqrs/action-handlers';
 import { IQueryHandler, Query, QueryHandler } from '@/src/infrastructure/cqrs/queries';
-import GetPlotMetadataQuery, { GetPlotMetadataData } from '@/src/api/queries/energetic/staking/metadata/get-plot-metadata.query';
+import GetPlotPowerRateQuery, {
+  GetPlotPowerRateData,
+} from '~/src/api/queries/energetic/staking/get-plot-power-rate/get-plot-power-rate.query';
 
-@QueryHandler(GetPlotMetadataQuery)
+@QueryHandler(GetPlotPowerRateQuery)
 export default class GetCollectionHandler
-  extends PactAction<PactModule.ENERGETIC_PLOT_STAKING_CENTER, 'get-staked-items-on-plot'>
-  implements IQueryHandler<GetPlotMetadataData>
+  extends PactAction<PactModule.ENERGETIC_PLOT_STAKING_CENTER, 'get-plot-power-rate'>
+  implements IQueryHandler<GetPlotPowerRateData>
 {
   constructor() {
-    super(PactModule.ENERGETIC_PLOT_STAKING_CENTER, 'get-staked-items-on-plot');
+    super(PactModule.ENERGETIC_PLOT_STAKING_CENTER, 'get-plot-power-rate');
   }
 
-  async execute({ data }: Query<GetPlotMetadataData>): Promise<any> {
+  async execute({ data }: Query<GetPlotPowerRateData>): Promise<any> {
     const { plotId } = data;
 
     const commandBuilder = this.builder(plotId);

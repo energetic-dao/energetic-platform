@@ -1,8 +1,8 @@
-import { Command, CommandHandler, ICommandHandler } from '~/src/infrastructure/cqrs/commands';
-import { PactAction } from '~/src/infrastructure/pact/pact.action';
-import CreateTokenCommand, { CreateTokenData } from '~/src/api/commands/marmalade/token/create/create-token.command';
-import { PactModule } from '~/src/infrastructure/pact';
-import { Metadata } from '~/src/infrastructure/cqrs/action-handlers';
+import { Command, CommandHandler, ICommandHandler } from '@/src/infrastructure/cqrs/commands';
+import { PactAction } from '@/src/infrastructure/pact/pact.action';
+import CreateTokenCommand, { CreateTokenData } from '@/src/api/commands/marmalade/token/create/create-token.command';
+import { PactModule } from '@/src/infrastructure/pact';
+import { Metadata } from '@/src/infrastructure/cqrs/action-handlers';
 
 @CommandHandler(CreateTokenCommand)
 export default class CreateTokenHandler
@@ -22,16 +22,16 @@ export default class CreateTokenHandler
       .addData({
         ...envData,
       })
-      .addCap(`${PactModule.MARMALADE_COLLECTION}.OPERATOR`, publicKey, collectionId)
-      .addCap('coin.GAS', publicKey); // @todo gas station
+      .addCap(`${PactModule.MARMALADE_COLLECTION}.OPERATOR`, publicKey, collectionId);
+    //.addCap('coin.GAS', publicKey); // @todo gas station
 
-    commandBuilder.code = `(${PactModule.MARMALADE_LEDGER}.create-token "${id}" ${precision.int} "${uri}" {"concrete-policies":{"quote-policy":false,"non-fungible-policy":false,"royalty-policy":false,"collection-policy":true},"immutable-policies":[free.energetic-enumerable-collection-policy, free.energetic-plot-item-policy],"adjustable-policies":[]})`;
+    commandBuilder.code = `(${PactModule.MARMALADE_LEDGER}.create-token "${id}" ${precision.int} "${uri}" {"concrete-policies":{"quote-policy":false,"non-fungible-policy":true,"royalty-policy":false,"collection-policy":true},"immutable-policies":[free.energetic-plot-policy,free.energetic-enumerable-collection-policy],"adjustable-policies":[]})`;
 
     console.log(JSON.stringify(policies));
     console.log(
       JSON.stringify(policies).replace(
-        '["free.energetic-enumerable-collection-policy"]',
-        '[free.energetic-enumerable-collection-policy, free.energetic-plot-item-policy]',
+        '["free.energetic-plot-policy"]',
+        '[free.energetic-plot-policy,free.energetic-enumerable-collection-policy]',
       ),
     );
 

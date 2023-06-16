@@ -1,8 +1,8 @@
-import { PactAction } from '~/src/infrastructure/pact/pact.action';
-import { PactModule } from '~/src/infrastructure/pact';
-import { Metadata } from '~/src/infrastructure/cqrs/action-handlers';
-import { IQueryHandler, Query, QueryHandler } from '~/src/infrastructure/cqrs/queries';
-import GetStakedPlotsQuery, { GetStakedPlotsData } from '~/src/api/queries/energetic/staking/get-staked-plots/get-staked-plots.query';
+import { PactAction } from '@/src/infrastructure/pact/pact.action';
+import { PactModule } from '@/src/infrastructure/pact';
+import { Metadata } from '@/src/infrastructure/cqrs/action-handlers';
+import { IQueryHandler, Query, QueryHandler } from '@/src/infrastructure/cqrs/queries';
+import GetStakedPlotsQuery, { GetStakedPlotsData } from '@/src/api/queries/energetic/staking/get-staked-plots/get-staked-plots.query';
 
 @QueryHandler(GetStakedPlotsQuery)
 export default class GetCollectionHandler

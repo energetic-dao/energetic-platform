@@ -1,8 +1,8 @@
-import { PactAction } from '~/src/infrastructure/pact/pact.action';
-import { PactModule } from '~/src/infrastructure/pact';
-import { Metadata } from '~/src/infrastructure/cqrs/action-handlers';
-import { IQueryHandler, Query, QueryHandler } from '~/src/infrastructure/cqrs/queries';
-import GetBalanceQuery, { GetBalanceData } from '~/src/api/queries/marmalade/token/get/get-balance.query';
+import { PactAction } from '@/src/infrastructure/pact/pact.action';
+import { PactModule } from '@/src/infrastructure/pact';
+import { Metadata } from '@/src/infrastructure/cqrs/action-handlers';
+import { IQueryHandler, Query, QueryHandler } from '@/src/infrastructure/cqrs/queries';
+import GetBalanceQuery, { GetBalanceData } from '@/src/api/queries/marmalade/token/get/get-balance.query';
 
 @QueryHandler(GetBalanceQuery)
 export default class GetBalanceHandler

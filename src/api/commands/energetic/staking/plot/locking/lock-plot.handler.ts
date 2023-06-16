@@ -1,8 +1,8 @@
-import { Command, CommandHandler, ICommandHandler } from '~/src/infrastructure/cqrs/commands';
-import { PactAction } from '~/src/infrastructure/pact/pact.action';
-import LockPlotCommand, { LockPlotData } from '~/src/api/commands/energetic/staking/plot/locking/lock-plot.command';
-import { PactModule } from '~/src/infrastructure/pact';
-import { Metadata } from '~/src/infrastructure/cqrs/action-handlers';
+import { Command, CommandHandler, ICommandHandler } from '@/src/infrastructure/cqrs/commands';
+import { PactAction } from '@/src/infrastructure/pact/pact.action';
+import LockPlotCommand, { LockPlotData } from '@/src/api/commands/energetic/staking/plot/locking/lock-plot.command';
+import { PactModule } from '@/src/infrastructure/pact';
+import { Metadata } from '@/src/infrastructure/cqrs/action-handlers';
 
 @CommandHandler(LockPlotCommand)
 export default class LockPlotHandler
@@ -25,7 +25,7 @@ export default class LockPlotHandler
           pred: 'keys-all',
         },
       })
-      .addCap(`${PactModule.COIN}.GAS`, publicKey)
+      //.addCap(`${PactModule.COIN}.GAS`, publicKey)
       .addCap(`${PactModule.MARMALADE_LEDGER}.TRANSFER`, publicKey, plotId, `k:${publicKey}`, escrowAccount, amount)
       .addCap(`${PactModule.ENERGETIC_ENUMERABLE_COLLECTION_POLICY}.TRANSFER`, publicKey, plotId, `k:${publicKey}`, escrowAccount, amount)
       .addCap(`${PactModule.ENERGETIC_PLOT_STAKING_CENTER}.STAKE`, publicKey, plotId, `k:${publicKey}`, amount);
