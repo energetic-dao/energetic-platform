@@ -37,8 +37,8 @@
             </svg>
           </button>
           <a href="" class="text-xl font-bold flex items-center lg:ml-2.5">
-            <!--            <img src="/images/logo.svg" class="h-6 mr-2" alt="Kinetic logo" />-->
-            <h1 class="text-4xl">Kinetic DAO</h1>
+            <!--            <img src="/images/logo.svg" class="h-6 mr-2" alt="Energetic logo" />-->
+            <h1 class="text-4xl">Energetic DAO</h1>
           </a>
         </div>
         <div class="flex items-center truncate">
@@ -70,10 +70,10 @@
 </template>
 
 <script setup lang="ts">
-import WalletProviderModal from '~/src/components/modals/walletProviderModal.vue';
+import WalletProviderModal from '@/src/components/modals/walletProviderModal.vue';
 import { storeToRefs } from 'pinia';
 import { Ref } from 'vue';
-import { ProviderType, useWallet } from '~/src/stores/wallet.store';
+import { ProviderType, useWallet } from '@/src/stores/wallet.store';
 import { useLocalStorage, RemovableRef } from '@vueuse/core';
 
 const walletStore = useWallet();

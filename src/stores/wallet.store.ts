@@ -1,8 +1,8 @@
-import { KADENA_CHAIN, Provider, Session } from '~/src/infrastructure/types/wallets';
-import { WalletConnectProvider } from '~/src/infrastructure/providers/wallet-connect.provider';
+import { KADENA_CHAIN, Provider, Session } from '@/src/infrastructure/types/wallets';
+import { WalletConnectProvider } from '@/src/infrastructure/providers/wallet-connect.provider';
 import { RuntimeConfig } from '@nuxt/schema';
-import { ProviderException } from '~/src/infrastructure/types/exceptions/provider.exception';
-import { XWalletProvider } from '~/src/infrastructure/providers/x-wallet.provider';
+import { ProviderException } from '@/src/infrastructure/types/exceptions/provider.exception';
+import { XWalletProvider } from '@/src/infrastructure/providers/x-wallet.provider';
 
 export enum ProviderType {
   WALLET_CONNECT = 'wallet-connect',
