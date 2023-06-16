@@ -1,7 +1,8 @@
 import { ICommandBuilder, IPactCommand, IPactModules, IPublicMeta, Pact } from '@kadena/client';
-import { useWallet } from '~/src/stores/wallet.store';
+import { useWallet } from '@/src/stores/wallet.store';
 import { ICap, ISignatureJson, ISigningCap, ISigningRequest } from '@kadena/types';
 import { IRequestKeys, send } from '@kadena/chainweb-node-client';
+import { PactModule as PactNamespace } from './types';
 
 type PactModule = keyof IPactModules;
 type PactFunction<T extends keyof IPactModules> = keyof IPactModules[T];
@@ -42,7 +43,8 @@ export class PactAction<M extends PactModule = PactModule, F extends PactFunctio
       .local(this.apiHost, options);
 
     if (result.status !== 'success') {
-      throw new Error(`Pact command failed: ${result.status}`);
+      console.error(`Pact command failed: ${result.status}`);
+      return;
     }
 
     console.log(result.data);
@@ -58,14 +60,16 @@ export class PactAction<M extends PactModule = PactModule, F extends PactFunctio
       throw new Error('No wallet provider or session found');
     }
 
-    commandBuilder.setMeta(
-      {
-        sender: 'k:' + session.account,
-        chainId: '1',
-        gasLimit: 10000,
-      },
-      'testnet04',
-    );
+    commandBuilder
+      .setMeta(
+        {
+          sender: 'energetic-gas-station',
+          chainId: '1',
+          gasLimit: 20000,
+        },
+        'testnet04',
+      )
+      .addCap(`${PactNamespace.ENERGETIC_GAS_STATION}.GAS_PAYER`, session.account, 'energetic-gas-station', { int: 1 }, 1.0);
 
     const metadata: IPublicMeta = commandBuilder.publicMeta;
 
